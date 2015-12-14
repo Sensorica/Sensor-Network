@@ -1,3 +1,5 @@
+//NOTE: need to include the dht.h library https://github.com/adafruit/DHT-sensor-library
+
 #include <dht.h>
 #define dht_apin A0 // Analog Pin sensor is connected to
  
