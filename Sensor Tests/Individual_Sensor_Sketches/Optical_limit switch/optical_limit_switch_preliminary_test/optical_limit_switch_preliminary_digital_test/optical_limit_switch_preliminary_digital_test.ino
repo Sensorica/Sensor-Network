@@ -9,6 +9,7 @@ int LEDPin = 13; // output
 
 void setup()                    // run once, when the sketch starts
 {
+  Serial.begin(9600);           //  setup serial
   pinMode(LEDPin, OUTPUT);      // sets the digital pin as output
 }
 

@@ -1,5 +1,5 @@
 /*
-Demonstrate IR interrupt opto switch with analog in, for threshold adjustment
+Demonstrate IR limit switch with analog in, for threshold adjustment
 Author: T!b!
 Date: 2015-11-25
 */
