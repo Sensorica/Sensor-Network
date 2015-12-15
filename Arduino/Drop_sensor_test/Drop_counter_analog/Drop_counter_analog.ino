@@ -27,7 +27,7 @@ void loop()                     // run over and over again
        
        }   
     previousValue = currentValue; 
-    delay(10);
+    delay(10); // for some reason it works better with 10ms delay. 
 }
 
 
