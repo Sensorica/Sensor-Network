@@ -18,6 +18,6 @@ void loop()                     // run over and over again
 {
    val = analogRead(analogPin);    // read the input pin
    Serial.println(val);       // debug value
-   delay(300);
+   delay(200);
 }
 
