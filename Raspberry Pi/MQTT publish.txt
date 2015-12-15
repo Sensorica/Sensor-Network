@@ -1,0 +1,10 @@
+MQTT AWS PUBLISH TEST
+
+Publish to AWS IoT MQTT broker topic '$aws/things/sensorica_node/shadow/update' :
+
+$ mosquitto_pub --cafile "VeriSign-Class 3-Public-Primary-Certification-Authority-G5.pem" --cert "5c8a6b4fd4-certificate.pem.crt" --key "5c8a6b4fd4-private.pem.key" -h "AAU8NJF5D2XBZ.iot.us-west-2.amazonaws.com" -p 8883 -q 1 -d -t $aws/things/sensorica_node/shadow/update -i "sensorica_node" -m “message in JSON format”
+Client sensorica_node sending CONNECT
+Client sensorica_node received CONNACK
+Client sensorica_node sending PUBLISH (d0, q1, r0, m1, '/things/sensorica_node/shadow/update', ... (5 bytes))
+Client sensorica_node received PUBACK (Mid: 1)
+Client sensorica_node sending DISCONNECT
