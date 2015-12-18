@@ -11,13 +11,13 @@ int LEDPin = 13; // output, lights the IR LED
 int drops=1; // define drop count variable
 
 
-void setup()                    // run once, when the sketch starts
+void setup()                   // run once, when the sketch starts
 {
   Serial.begin(9600);          //  setup serial
-  pinMode(LEDPin, OUTPUT);      // sets the digital pin as output
+  pinMode(LEDPin, OUTPUT);     // sets the digital pin as output
 }
 
-void loop()                     // run over and over again
+void loop()                    // run over and over again
 {
    currentValue = analogRead(analogPin);    // read the input pin
    
