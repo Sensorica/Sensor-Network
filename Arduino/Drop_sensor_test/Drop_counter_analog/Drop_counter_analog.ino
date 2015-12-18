@@ -7,8 +7,10 @@ int analogPin = 3;     // potentiometer wiper (middle terminal) connected to ana
                        // outside leads to ground and +5V
 int previousValue;
 int currentValue;     // variable to store the value read
-int LEDPin = 13; // output
-int drip=1;
+int LEDPin = 13; // output, lights the IR LED
+int drops=1; // define drop count variable
+
+
 void setup()                    // run once, when the sketch starts
 {
   Serial.begin(9600);          //  setup serial
@@ -21,9 +23,9 @@ void loop()                     // run over and over again
    
    if ((previousValue < 700) && (currentValue > 900)) // if it goes from LOW to HIGH, [adjust the threshoold with a bandgap]
        { 
-       drip += 1; //increment number of drops
+       drops += 1; //increment number of drops
        Serial.print("drip count = "); // print cont on the screen
-       Serial.println(drip); // print count on the screen
+       Serial.println(drops); // print count on the screen
        
        }   
     previousValue = currentValue; 
