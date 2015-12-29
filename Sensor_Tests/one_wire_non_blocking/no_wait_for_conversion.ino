@@ -19,9 +19,11 @@ unsigned long lastTempRequest = 0; //when the last read occured
 int  delayInMillis = 0;            //how long to wait for a read
 float temperature = 0.0;           //the temperature
 int  idle = 0;                     //how long we stay in the main loop
+int stripped_temp = 0;
 
 void setup(void)
 {
+  
   Serial.begin(115200);
   
   sensors.begin();
@@ -46,7 +48,8 @@ void loop(void)
     digitalWrite(13, LOW);
     Serial.print(" Temperature: ");
     temperature = sensors.getTempCByIndex(0);
-    Serial.println(temperature, resolution - 8); 
+    stripped_temp = (int) temperature
+	Serial.println(stripped_temp); 
     Serial.print("  Resolution: ");
     Serial.println(resolution); 
     Serial.print("Idle counter: ");
