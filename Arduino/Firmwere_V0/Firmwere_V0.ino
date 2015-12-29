@@ -11,10 +11,10 @@ void setup()
 } 
 void loop()
 {
-  shaftTemp.Update();
-  ambientTemp.Update();
-  packingTemp.Update();
-  dripSensor.Update();
+ //shaftTemp.Update();
+ //ambientTemp.Update();
+ //packingTemp.Update();
+ dripSensor.Update();
 }
 
 
@@ -30,6 +30,7 @@ class DripSensor
   int currentValue;// sensorData used to store the sensor data
   unsigned long previousMillis;  // will store last time sensorData was updated
   int drip;
+  
 public:
                DripSensor(int pin, long frequency)
                  {
@@ -37,7 +38,7 @@ public:
             DelayTime = frequency;
             previousValue = 0;
             previousMillis = 0;
-                  drip=1;       
+            drip=1;       
                  }
 void Update()
              {
@@ -49,7 +50,7 @@ void Update()
             currentValue = analogRead(sensorPin);    // read the input pin
    
                  if ((previousValue < 150) && (currentValue > 250))
-                     { 
+                     {
                      Serial.print("drip count = ");
                      Serial.println(drip);
                      drip += 1; 
