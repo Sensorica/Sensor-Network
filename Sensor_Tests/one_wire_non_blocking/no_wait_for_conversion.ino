@@ -14,12 +14,12 @@ DallasTemperature sensors(&oneWire);
 DeviceAddress tempDeviceAddress;
 
 //Setting up variables
-int  resolution = 12;              //resolution from 9-12 bits
+//int  resolution = 12;              //resolution from 9-12 bits
 unsigned long lastTempRequest = 0; //when the last read occured 
 int  delayInMillis = 0;            //how long to wait for a read
 float temperature = 0.0;           //the temperature
 int  idle = 0;                     //how long we stay in the main loop
-int stripped_temp = 0;
+//int stripped_temp = 0;
 
 void setup(void)
 {
@@ -28,13 +28,13 @@ void setup(void)
   
   sensors.begin();
   sensors.getAddress(tempDeviceAddress, 0);
-  sensors.setResolution(tempDeviceAddress, resolution);
+  //sensors.setResolution(tempDeviceAddress, resolution);
   
   // This is the library function that disables needing to hold the pin state
   sensors.setWaitForConversion(false);
   
   sensors.requestTemperatures();
-  delayInMillis = 750 / (1 << (12 - resolution)); 
+  delayInMillis = 750 /// (1 << (12 - resolution)); 
   lastTempRequest = millis(); 
   
   pinMode(13, OUTPUT); 
@@ -48,22 +48,22 @@ void loop(void)
     digitalWrite(13, LOW);
     Serial.print(" Temperature: ");
     temperature = sensors.getTempCByIndex(0);
-    stripped_temp = (int) temperature
-	Serial.println(stripped_temp); 
-    Serial.print("  Resolution: ");
-    Serial.println(resolution); 
+    //stripped_temp = (int) temperature;
+	Serial.println(temperature); 
+    //Serial.print("  Resolution: ");
+    //Serial.println(resolution); 
     Serial.print("Idle counter: ");
     Serial.println(idle);     
     Serial.println(); 
     
     idle = 0; 
         
-    resolution++;
-    if (resolution > 12) resolution = 9;
+    //resolution++;
+    //if (resolution > 12) resolution = 9;
     
-    sensors.setResolution(tempDeviceAddress, resolution);
+    //sensors.setResolution(tempDeviceAddress, resolution);
     sensors.requestTemperatures(); 
-    delayInMillis = 750 / (1 << (12 - resolution));
+    delayInMillis = 750;
     lastTempRequest = millis(); 
   }
   
