@@ -1,7 +1,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
-
+// Digital pin that sensor is connected to
 #define ONE_WIRE_BUS 4
 
 
@@ -10,13 +10,15 @@ OneWire oneWire(ONE_WIRE_BUS);
 // Pass our oneWire reference to Dallas Temperature. 
 DallasTemperature sensors(&oneWire);
 
+//We will need to change this to code that checks how many sensors on the chain
 DeviceAddress tempDeviceAddress;
 
-int  resolution = 12;
-unsigned long lastTempRequest = 0;
-int  delayInMillis = 0;
-float temperature = 0.0;
-int  idle = 0;
+//Setting up variables
+int  resolution = 12;              //resolution from 9-12 bits
+unsigned long lastTempRequest = 0; //when the last read occured 
+int  delayInMillis = 0;            //how long to wait for a read
+float temperature = 0.0;           //the temperature
+int  idle = 0;                     //how long we stay in the main loop
 
 void setup(void)
 {
@@ -26,7 +28,9 @@ void setup(void)
   sensors.getAddress(tempDeviceAddress, 0);
   sensors.setResolution(tempDeviceAddress, resolution);
   
+  // This is the library function that disables needing to hold the pin state
   sensors.setWaitForConversion(false);
+  
   sensors.requestTemperatures();
   delayInMillis = 750 / (1 << (12 - resolution)); 
   lastTempRequest = millis(); 
