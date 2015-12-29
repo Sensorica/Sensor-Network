@@ -50,10 +50,7 @@ void Update()
             pinMode(LEDpin, OUTPUT);        // sets the digital pin as output
             attachInterrupt(digitalPinToInterrupt(2), eventR, RISING); // IMPORTANT: reattach pin to interrupt for the next event 
             eventsR = LOW;  
-            eventsF = LOW; 
-            
-            
-            
+            eventsF = LOW;     
             
             if (eventsR == HIGH)              // if new drop leading edge
                 { 
@@ -81,7 +78,18 @@ void Update()
           attachInterrupt(digitalPinToInterrupt(2), eventF, FALLING);
               } 
                 }
-                 }
+                
+          void eventR() {
+          //detachInterrupt(digitalPinToInterrupt(2)); // IMPORTANT - detach interrupt and reattach it in the main look, to avoid false triggers
+          eventsR = HIGH;
+          }
+
+          void eventF() {
+          //detachInterrupt(digitalPinToInterrupt(2)); // IMPORTANT - detach interrupt and reattach it in the main look, to avoid false triggers
+          drops += 1; //increment number of drops
+          eventsF = HIGH;
+          }
+              }
                 previousMillis = currentMillis - previousMillis;  // Remember the time
              }
             
