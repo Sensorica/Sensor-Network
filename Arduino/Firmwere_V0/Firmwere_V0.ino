@@ -1,9 +1,9 @@
 /* First number is the pin, second is time to poll for and third is polling frequency, both in milliseconds.
 Still need to add reporting to serial and some error checking (is sensor connected?) */
  
-AnalogSensor shaftTemp(10, 1, 500);
-AnalogSensor ambientTemp(11, 1, 1000);
-AnalogSensor packingTemp(12, 1, 100);
+//AnalogSensor shaftTemp(10, 1, 500);
+//AnalogSensor ambientTemp(11, 1, 1000);
+//AnalogSensor packingTemp(12, 1, 100);
 DigitalSensor dripSensor(14, 1, 10); 
 
 void setup()
@@ -27,9 +27,9 @@ class DripSensor
  
   // These maintain the current state
   int previousValue; 
-        int currentValue;// sensorData used to store the sensor data
+  int currentValue;// sensorData used to store the sensor data
   unsigned long previousMillis;  // will store last time sensorData was updated
-        int drip;
+  int drip;
 public:
                DripSensor(int pin, long frequency)
                  {
@@ -41,7 +41,7 @@ public:
                  }
 void Update()
              {
-             // check to see if it's time to read the analog sensor
+            // check to see if it's time to read the analog sensor
             unsigned long currentMillis = millis();
    
             if (previousMillis >= DelayTime)
@@ -53,7 +53,7 @@ void Update()
                      Serial.print("drip count = ");
                      Serial.println(drip);
                      drip += 1; 
-                     }   
+                     }
                   previousValue = currentValue; 
                  }
                 previousMillis = currentMillis - previousMillis;  // Remember the time

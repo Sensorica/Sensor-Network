@@ -1,16 +1,20 @@
-int LEDpin = 13; // output, lights the IR LED
-volatile int drops = 0; // define drop count variable
-//unsigned long previousDrops = 0; // define drop count variable
+/* This sketch uses a digital pin out to drive the LED of an optical limit switch
+ * and an interrupt pin from the Arduino board that is connected to the photodetector of the same optical limit switch.  
+ */
+
+int LEDpin = 13;                    // output, lights the IR LED
+volatile int drops = 0;             // define drop count variable
+//unsigned long previousDrops = 0;  // define drop count variable
 volatile boolean eventsR = LOW;
 volatile boolean eventsF = LOW;
-//unsigned int currentTime = 0; // define variable for timestamping
-//unsigned int previousTime = 0; // define variable for timestamping
-//unsigned int duration = 0; // define variable for timestamping
+//unsigned int currentTime = 0;     // define variable for timestamping
+//unsigned int previousTime = 0;    // define variable for timestamping
+//unsigned int duration = 0;        // define variable for timestamping
 //volatile unsigned long last_micros;
       
 void setup() {
-    Serial.begin(9600);        //  setup serial
-    pinMode(LEDpin, OUTPUT);   // sets the digital pin as output
+    Serial.begin(9600);             //  setup serial
+    pinMode(LEDpin, OUTPUT);        // sets the digital pin as output
     attachInterrupt(digitalPinToInterrupt(2), eventR, RISING); // IMPORTANT: reattach pin to interrupt for the next event 
     eventsR = LOW;  
     eventsF = LOW;  
@@ -18,23 +22,23 @@ void setup() {
 
 void loop() {
   
-  //currentTime = millis(); // timestamp this event
-  if (eventsR == HIGH) // if new drop leading edge
+  //currentTime = millis();         // timestamp this event
+  if (eventsR == HIGH)              // if new drop leading edge
     { 
       detachInterrupt(digitalPinToInterrupt(2));
-      if (eventsF == HIGH) // if new drop falling edge
+      if (eventsF == HIGH)          // if new drop falling edge
       {
       // detachInterrupt(digitalPinToInterrupt(2)); // IMPORTANT - detach interrupt and reattach it in the main look, to avoid false triggers          
-      // currentTime = millis(); // timestamp this event
-      //Serial.print("drop count = "); // print cont on the screen
+      // currentTime = millis();           // timestamp this event
+      //Serial.print("drop count = ");     // print cont on the screen
       Serial.println(drops); // print count on the screen
-      // Serial.print(" ; duration = "); // print cont on the screen
-      // Serial.println(duration); // print count on the screen
+      // Serial.print(" ; duration = ");   // print cont on the screen
+      // Serial.println(duration);         // print count on the screen
       //previousDrops = drops;  
       eventsR = LOW;
       eventsF = LOW;
-      //duration = currentTime-previousTime; // calculate duration
-      // previousTime = currentTime; // reset previousTime for next duration
+      //duration = currentTime-previousTime;  // calculate duration
+      // previousTime = currentTime;          // reset previousTime for next duration
       delay(20);
       //attachInterrupt(digitalPinToInterrupt(2), event, RISING); // IMPORTANT: reattach pin to interrupt for the next event 
       attachInterrupt(digitalPinToInterrupt(2), eventR, RISING);
