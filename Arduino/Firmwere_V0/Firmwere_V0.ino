@@ -4,7 +4,7 @@ Still need to add reporting to serial and some error checking (is sensor connect
 //AnalogSensor shaftTemp(10, 1, 500);
 //AnalogSensor ambientTemp(11, 1, 1000);
 //AnalogSensor packingTemp(12, 1, 100);
-DigitalSensor dripSensor(14, 1, 10); 
+DigitalSensor dripSensor(14, 1, 10);
 
 void setup()
 {
@@ -32,7 +32,7 @@ class DripSensor
   int drip;
   
 public:
-               DripSensor(int pin, long frequency)
+            DripSensor(int pin, long frequency)
                  {
             sensorPin = pin;
             DelayTime = frequency;
@@ -47,15 +47,40 @@ void Update()
    
             if (previousMillis >= DelayTime)
                 {
-            currentValue = analogRead(sensorPin);    // read the input pin
-   
-                 if ((previousValue < 150) && (currentValue > 250))
-                     {
-                     Serial.print("drip count = ");
-                     Serial.println(drip);
-                     drip += 1; 
-                     }
-                  previousValue = currentValue; 
+            pinMode(LEDpin, OUTPUT);        // sets the digital pin as output
+            attachInterrupt(digitalPinToInterrupt(2), eventR, RISING); // IMPORTANT: reattach pin to interrupt for the next event 
+            eventsR = LOW;  
+            eventsF = LOW; 
+            
+            
+            
+            
+            if (eventsR == HIGH)              // if new drop leading edge
+                { 
+              detachInterrupt(digitalPinToInterrupt(2));
+             if (eventsF == HIGH)          // if new drop falling edge
+               {
+             // detachInterrupt(digitalPinToInterrupt(2)); // IMPORTANT - detach interrupt and reattach it in the main look, to avoid false triggers          
+             // currentTime = millis();           // timestamp this event
+             //Serial.print("drop count = ");     // print cont on the screen
+             Serial.println(drops); // print count on the screen
+             // Serial.print(" ; duration = ");   // print cont on the screen
+             // Serial.println(duration);         // print count on the screen
+             //previousDrops = drops;  
+            eventsR = LOW;
+           eventsF = LOW;
+           //duration = currentTime-previousTime;  // calculate duration
+           // previousTime = currentTime;          // reset previousTime for next duration
+           delay(20);
+           //attachInterrupt(digitalPinToInterrupt(2), event, RISING); // IMPORTANT: reattach pin to interrupt for the next event 
+          attachInterrupt(digitalPinToInterrupt(2), eventR, RISING);
+              }
+             else
+              {
+          delay(20);
+          attachInterrupt(digitalPinToInterrupt(2), eventF, FALLING);
+              } 
+                }
                  }
                 previousMillis = currentMillis - previousMillis;  // Remember the time
              }
