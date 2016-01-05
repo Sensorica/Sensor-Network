@@ -1,6 +1,7 @@
 /* This sketch uses a digital pin out to drive the LED of an optical limit switch
  * and an interrupt pin from the Arduino board that is connected to the photodetector of the same optical limit switch.  
  */
+#include <Average.h>  // include some math functions http://playground.arduino.cc/Main/Average 
 
 int LEDpin = 13;                    // output, lights the IR LED
 volatile int drops = 0;             // define drop count variable
@@ -11,7 +12,9 @@ unsigned int currentTime = 0;       // define variable for timestamping
 unsigned int previousTime = 0;      // define variable for timestamping
 unsigned int duration = 0;          // define variable for timestamping
 volatile unsigned long last_micros;
-unsigned int durationArray = [0,0,0,0,0]; // define array of durations between drop events
+#define CNT 5
+int durationArray[CNT]; // define array of durations between drop events
+float periode = 0; // is the periode or the inverse of the droprate. 
       
 void setup() {
     Serial.begin(9600);             //  setup serial
@@ -27,28 +30,30 @@ void loop() {
   if (eventsR == HIGH)              // if new drop leading edge
     { 
       detachInterrupt(digitalPinToInterrupt(2));
-      if (eventsF == HIGH)          // if new drop falling edge
-      {
-      // detachInterrupt(digitalPinToInterrupt(2)); // IMPORTANT - detach interrupt and reattach it in the main look, to avoid false triggers          
-       currentTime = millis();           // timestamp this event
-      //Serial.print("drop count = ");     // print cont on the screen
-      Serial.println(drops); // print count on the screen
-      // Serial.print(" ; duration = ");   // print cont on the screen
-      // Serial.println(duration);         // print count on the screen
-      //previousDrops = drops;  
-      eventsR = LOW;
-      eventsF = LOW;
-      duration = currentTime-previousTime;  // calculate duration
-      previousTime = currentTime;          // reset previousTime for next duration
-      delay(20);
-      //attachInterrupt(digitalPinToInterrupt(2), event, RISING); // IMPORTANT: reattach pin to interrupt for the next event 
-      attachInterrupt(digitalPinToInterrupt(2), eventR, RISING);
-      }
-      else
-      {
-       delay(20);
-       attachInterrupt(digitalPinToInterrupt(2), eventF, FALLING);
-      } 
+      if (eventsF == HIGH){          // if new drop falling edge
+        //detachInterrupt(digitalPinToInterrupt(2)); // IMPORTANT - detach interrupt and reattach it in the main look, to avoid false triggers          
+         currentTime = millis();           // timestamp this event
+        //Serial.print("drop count = ");     // print cont on the screen
+        Serial.println(drops); // print count on the screen
+        // Serial.print(" ; duration = ");   // print cont on the screen
+        // Serial.println(duration);         // print count on the screen
+        //previousDrops = drops;  
+        eventsR = LOW;
+        eventsF = LOW;
+        duration = currentTime-previousTime;  // calculate duration
+
+        // Rolling average of durations update
+        periode = rollingAverage(durationArray, CNT, duration); // see more avout rolling average http://playground.arduino.cc/Main/Average
+            
+        previousTime = currentTime;           // reset previousTime for next duration
+        delay(20);
+        //attachInterrupt(digitalPinToInterrupt(2), event, RISING); // IMPORTANT: reattach pin to interrupt for the next event 
+        attachInterrupt(digitalPinToInterrupt(2), eventR, RISING);
+        }
+        else {
+         delay(20);
+        attachInterrupt(digitalPinToInterrupt(2), eventF, FALLING);
+        } 
     }
  }
  
