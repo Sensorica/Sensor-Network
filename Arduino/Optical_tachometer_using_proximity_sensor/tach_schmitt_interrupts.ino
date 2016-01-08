@@ -1,10 +1,11 @@
 const byte TACH = 2;
+const byte DURATION = 1;
 volatile boolean revolution_occured = false;
-int revolution_count = 0;
-int current_time = 0
-int previous_time = 0;
-int rpm = 0;
-int duration = 1; // in seconds
+unsigned int revolution_count = 0;
+unsigned int current_time = 0;
+unsigned int previous_time = 0;
+unsigned int rpm = 0;
+//unsigned int duration = 1; // in seconds
 
 // Interrupt Service Routine (ISR)
 void revolution ()
@@ -15,24 +16,26 @@ void revolution ()
 void setup ()
 {
   Serial.begin(115200);
-  pinMode (LED, OUTPUT);  // so we can update the LED
+  
   digitalWrite (TACH, HIGH);  // internal pull-up resistor built in :-)
-  attachInterrupt (0, revolution, RISING);  // attach interrupt handler
+  attachInterrupt (digitalPinToInterrupt(2), revolution, RISING);  // attach interrupt handler
 }  // end of setup
 
 void loop ()
 {
-  if (revolution) {
-    revolution_count += 1;
-    revolution_occured = false;
+  if (revolution_occured) {
+    revolution_count ++;
+    revolution_occured = !revolution_occured;
   }   
   
   current_time = millis();
   if (current_time - previous_time >= 1000) {
-    rpm = (revolution_count / duration * 60);
-	Serial.println (rpm);
-	revolution_count = 0;
-	previous_time = current_time;
-  }  
+    rpm = (revolution_count / DURATION * 60);
+    Serial.print ("rpm = ");
+    Serial.println (rpm);
+    Serial.print ("counts = ");
+    Serial.println (revolution_count); 
+    previous_time = current_time;
+    revolution_count = 0;
+  }   
 }
- 
