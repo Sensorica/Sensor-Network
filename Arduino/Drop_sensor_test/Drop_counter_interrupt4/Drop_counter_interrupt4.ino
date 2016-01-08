@@ -1,4 +1,4 @@
-/* This sketch uses a digital pin out to drive the LED of an optical limit switch and an interrupt pin from the Arduino 
+/*  This sketch uses a digital pin out to drive the LED of an optical limit switch and an interrupt pin from the Arduino 
  *  board (2 in this case) that is connected to the photodetector of the same optical limit switch.  
  * This setup works well with an input voltage to the interrupt pin between 4.1 and 4.3 V. Lower than that it misses triggers
  * higher than that it fires multiple times. So the input voltage to the interrupt needs to be conditioned with a Schmitt trigger.
