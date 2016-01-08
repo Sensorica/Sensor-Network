@@ -1,2 +1,3 @@
 This code uses the scarcely documented function sensors.setWaitForConversion(false).
-Please make sure both folders are in your arduino library folder.
+It is set to read two sensors but can be scaled easily. 
+Please make sure both folders are in your arduino library folder before compiling.
