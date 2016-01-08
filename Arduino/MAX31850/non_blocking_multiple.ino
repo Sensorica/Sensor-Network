@@ -48,7 +48,6 @@ void setup(void)
   if (!sensors.getAddress(ambientTemperature, 0)) Serial.println("Unable to find address for Device 0"); 
   if (!sensors.getAddress(casingTemperature, 1)) Serial.println("Unable to find address for Device 1"); 
   
-  
   // show the addresses we found on the bus
   Serial.print("Device 0 Address: ");
   printAddress(ambientTemperature);
@@ -69,11 +68,8 @@ void setup(void)
   Serial.print(sensors.getResolution(casingTemperature), DEC); 
   Serial.println();
   
-  
-  
-
-  
   sensors.setWaitForConversion(false);
+  
   sensors.requestTemperatures();
   delayInMillis = 750 / (1 << (3)); 
   lastTempRequest = millis(); 
@@ -128,21 +124,17 @@ void loop(void)
     digitalWrite(13, LOW);	
     Serial.print("Ambient temperature: ");
     ambient_temperature = sensors.getTempCByIndex(0);
-	Serial.println(ambient_temperature, 1); 
+    Serial.println(ambient_temperature, 1); 
 	
-	Serial.print("Casing temperature: ");
+    Serial.print("Casing temperature: ");
     casing_temperature = sensors.getTempCByIndex(1);
-	Serial.println(casing_temperature, 1); 
-	
-	
-    
-	
-	Serial.print("Idle counter: ");
+    Serial.println(casing_temperature, 1); 
+    Serial.print("Idle counter: ");
 	
     Serial.println(idle);     
     Serial.println();     
     idle = 0;     
-	sensors.requestTemperatures(); 
+    sensors.requestTemperatures(); 
     delayInMillis = 750 / (1 << (3));
     lastTempRequest = millis(); 
   }
@@ -152,6 +144,4 @@ void loop(void)
   // for the demo we just count the idle time in millis
   delay(1);
   idle++;
-  
-  
 }
