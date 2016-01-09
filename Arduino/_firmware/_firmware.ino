@@ -1,3 +1,5 @@
+unsigned int long PRINT_DELAY = 2000; //in milliseconds
+unsigned int long last_print_time = 0;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           OneWire temperature sensor 
@@ -5,7 +7,7 @@
 #include <DallasTemperature.h>
 
 // Data wire is plugged into port 2 on the Arduino
-#define ONE_WIRE_BUS 2
+#define ONE_WIRE_BUS 4
 #define TEMPERATURE_PRECISION 9
 
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
@@ -36,7 +38,6 @@ void revolution ()
 }  
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                  Drip Sensor
-const byte LED = 13;
 const byte SENSOR = 3;
 volatile boolean drop_occured = false;
 int drop_count = 0;
@@ -55,7 +56,7 @@ void setup()
   
   // Tachometer setup
   digitalWrite (TACH, HIGH);  // internal pull-up resistor built in :-)
-  attachInterrupt (digitalPinToInterrupt(2), revolution, RISING);  // attach interrupt handler for tachometer
+  attachInterrupt (0, revolution, RISING);  // attach interrupt handler for tachometer
   
   // OneWire sensor setup
   sensors.begin();
@@ -64,18 +65,63 @@ void setup()
   sensors.setResolution(ambientTemperature, TEMPERATURE_PRECISION);
   sensors.setResolution(casingTemperature, TEMPERATURE_PRECISION);
   sensors.setWaitForConversion(false);
+  sensors.requestTemperatures();
+  delayInMillis = 750 / (1 << (3)); 
+  lastTempRequest = millis(); 
   
   // Drip sensor setup
   digitalWrite (SENSOR, HIGH);  // internal pull-up resistor built in :-)
-  attachInterrupt (0, drop, RISING);  // attach interrupt handler
-  
-  
+  attachInterrupt (1, drop, RISING);  // attach interrupt handler  
 } 
 
 
 void loop()
 {
-  dripSensor.Update();
+   ////////////////////////////////////////////////////////Tachometer 
+   // Check if tach was triggered
+   if (revolution_occured) {
+   revolution_count ++;
+   revolution_occured = !revolution_occured;
+   }   
+ 
+ // Calculate RPM
+ current_time = millis();
+   if (current_time - previous_time >= 1000) {
+     rpm = (revolution_count / DURATION * 60);
+     previous_time = current_time;
+     revolution_count = 0;
+   } 
+  
+  /////////////////////////////////////////////////////////Temperature
+  
+  if (millis() - lastTempRequest >= delayInMillis) // waited long enough??
+  {
+    ambient_temperature = sensors.getTempCByIndex(0);
+    casing_temperature = sensors.getTempCByIndex(1);
+    sensors.requestTemperatures(); 
+    delayInMillis = 750 / (1 << (3));
+    lastTempRequest = millis(); 
+  }
+  
+  ///////////////////////////////////////////////////////Drops
+  
+  if (drop_occured) {
+    drop_count += 1;
+    drop_occured = false;
+    }    
+  
+  if (millis() - last_print_time >= PRINT_DELAY){
+    Serial.print ("rpm = ");
+    Serial.println (rpm);
+    Serial.print ("Ambient temperature: ");
+    Serial.println (ambient_temperature, 1); 
+    Serial.print ("Casing temperature: ");
+    Serial.println (casing_temperature, 1); 
+    Serial.print ("Drop count = ");
+    Serial.println (drop_count);
+    Serial.println();
+    last_print_time = millis();
+  }
 }
 
 
