@@ -110,6 +110,8 @@ void loop()
     drop_occured = false;
     }    
   
+  //////////////////////////////////////////////////////Printing
+  
   if (millis() - last_print_time >= PRINT_DELAY){
     Serial.print ("rpm = ");
     Serial.println (rpm);
