@@ -1,3 +1,5 @@
+#define PRINT_DELAY 2000 //in milliseconds
+unsigned int last_print_time = 0;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           OneWire temperature sensor 
@@ -36,7 +38,6 @@ void revolution ()
 }  
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                  Drip Sensor
-const byte LED = 13;
 const byte SENSOR = 3;
 volatile boolean drop_occured = false;
 int drop_count = 0;
@@ -64,18 +65,72 @@ void setup()
   sensors.setResolution(ambientTemperature, TEMPERATURE_PRECISION);
   sensors.setResolution(casingTemperature, TEMPERATURE_PRECISION);
   sensors.setWaitForConversion(false);
+  sensors.requestTemperatures();
+  delayInMillis = 750 / (1 << (3)); 
+  lastTempRequest = millis(); 
   
   // Drip sensor setup
   digitalWrite (SENSOR, HIGH);  // internal pull-up resistor built in :-)
-  attachInterrupt (0, drop, RISING);  // attach interrupt handler
-  
-  
+  attachInterrupt (0, drop, RISING);  // attach interrupt handler  
 } 
 
 
 void loop()
 {
-  dripSensor.Update();
+   ////////////////////////////////////////////////////////Tachometer 
+   // Check if tach was triggered
+   if (revolution_occured) {
+   revolution_count ++;
+   revolution_occured = !revolution_occured;
+ }   
+ 
+ // Calculate RPM
+ current_time = millis();
+ if (current_time - previous_time >= 1000) {
+   rpm = (revolution_count / DURATION * 60);
+   //Serial.print ("rpm = ");
+   //Serial.println (rpm);
+   //Serial.print ("counts = ");
+   //Serial.println (revolution_count); 
+   previous_time = current_time;
+   revolution_count = 0;
+  } 
+  
+  /////////////////////////////////////////////////////////Temperature
+  
+  if (millis() - lastTempRequest >= delayInMillis) // waited long enough??
+  {
+    //Serial.print("Ambient temperature: ");
+    ambient_temperature = sensors.getTempCByIndex(0);
+    //Serial.println(ambient_temperature, 1); 
+	
+    //Serial.print("Casing temperature: ");
+    casing_temperature = sensors.getTempCByIndex(1);
+    //Serial.println(casing_temperature, 1); 
+    sensors.requestTemperatures(); 
+    delayInMillis = 750 / (1 << (3));
+    lastTempRequest = millis(); 
+  }
+  
+  ///////////////////////////////////////////////////////Drops
+  
+  if (drop_occured) {
+    drop_count += 1;
+    drop_occured = false;
+    //Serial.println (drop_count);
+  }    
+  
+  if (millis() - last_print_time >= PRINT_DELAY){
+    Serial.print ("rpm = ");
+    Serial.println (rpm);
+    Serial.print ("Ambient temperature: ");
+    Serial.println (ambient_temperature, 1); 
+    Serial.print ("Casing temperature: ");
+    Serial.println (casing_temperature, 1); 
+    Serial.print ("Drop count = ");
+    Serial.println (drop_count);
+    Serial.println();
+    last_print_time = millis();
 }
 
 
