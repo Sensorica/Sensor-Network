@@ -1,0 +1,2 @@
+Links to serial optimizations to try:
+http://stackoverflow.com/questions/5534290/arduino-serial-print-optimization
