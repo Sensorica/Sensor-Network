@@ -1,4 +1,8 @@
 Links to serial optimizations to try:
+
 http://stackoverflow.com/questions/5534290/arduino-serial-print-optimization
 Serial.print or Serial.write? - http://forum.arduino.cc/index.php?topic=42603.0
 http://arduino.stackexchange.com/questions/707/high-precision-timing-on-arduino-for-serial-communication
+
+Speed difference between Arduino library and pure C coding
+http://www.instructables.com/id/Arduino-is-Slow-and-how-to-fix-it/
