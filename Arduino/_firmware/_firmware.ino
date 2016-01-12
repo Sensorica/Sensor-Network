@@ -1,6 +1,6 @@
 unsigned int long PRINT_DELAY = 2000; //in milliseconds
 unsigned int long last_print_time = 0;
-
+String data; 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           OneWire temperature sensor 
 #include <OneWire.h>
@@ -113,15 +113,17 @@ void loop()
   //////////////////////////////////////////////////////Printing
   
   if (millis() - last_print_time >= PRINT_DELAY){
-    Serial.print ("rpm = ");
-    Serial.println (rpm);
-    Serial.print ("Ambient temperature: ");
-    Serial.println (ambient_temperature, 1); 
-    Serial.print ("Casing temperature: ");
-    Serial.println (casing_temperature, 1); 
-    Serial.print ("Drop count = ");
-    Serial.println (drop_count);
-    Serial.println();
+    data = "";
+    data += ambient_temperature;
+    data += ",";
+    data += casing_temperature;
+    data += ",";
+    data += drop_count;
+    data += ",";
+    data += rpm;
+    
+    Serial.println (data);
+    
     last_print_time = millis();
   }
 }
