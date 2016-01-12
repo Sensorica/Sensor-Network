@@ -52,7 +52,7 @@ void drop ()
 
 void setup()
 {
-  Serial.begin(115200);   //Enable serial at high speed 
+  Serial.begin(9600);   //Enable serial at high speed 
   
   // Tachometer setup
   digitalWrite (TACH, HIGH);  // internal pull-up resistor built in :-)
