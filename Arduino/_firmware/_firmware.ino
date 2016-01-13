@@ -41,6 +41,9 @@ void revolution ()
 const byte SENSOR = 3;
 volatile boolean drop_occured = false;
 int drop_count = 0;
+unsigned long drop_durations[3] = {0,0,0};
+unsigned int drop_rate;
+unsigned long last_drop_time;
 
 // Drip sensor Interrupt Service Routine (ISR)
 void drop ()
@@ -107,6 +110,10 @@ void loop()
   
   if (drop_occured) {
     drop_count += 1;
+    drop_durations[drop_count -1] = millis() - last_drop_time;
+    last_drop_time = millis();
+    if (drop_count = 3) drop_count = 0;    
+    drop_rate = 60000 / (drop_durations[0] + drop_durations [1] + drop_durations [2]);
     drop_occured = false;
     }    
   
@@ -118,7 +125,7 @@ void loop()
     data += ",";
     data += casing_temperature;
     data += ",";
-    data += drop_count;
+    data += drop_rate;
     data += ",";
     data += rpm;
     
