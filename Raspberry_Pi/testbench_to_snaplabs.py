@@ -12,6 +12,7 @@ import time
 ser = serial.Serial('/dev/ttyUSB0', 9600)
 ser.flushInput()
 ser.flushOutput()
+
 while True:
     incomingData = ser.readline().strip()
     tokenizedData = incomingData.split(",")
@@ -30,10 +31,3 @@ while True:
     os.system(ambientTempBashCommand)
     os.system(dropCounterBashCommand)
     os.system(shaftSpeedBashCommand)
-#    print incomingData
-#    print tokenizedData[0]
-
-#    print tokenizedData[1]   
-#    print tokenizedData[2]
-#    print glandTemp
-
