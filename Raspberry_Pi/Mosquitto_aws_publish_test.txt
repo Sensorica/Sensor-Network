@@ -1,0 +1,1 @@
+sudo mosquitto_pub --cafile "VeriSign-Class 3-Public-Primary-Certification-Authority-G5.pem" --cert "5c8a6b4fd4-certificate.pem.crt" --key "5c8a6b4fd4-private.pem.key" -h "AAU8NJF5D2XBZ.iot.us-west-2.amazonaws.com" -p 8883 -q 0 -d -t \$aws/things/leaknet_poc/shadow/update -i leaknet_poc -m '{"state":{"reported":{"ambientTemp":24,"glandTemp":22,"throatTemp":23}}}'
