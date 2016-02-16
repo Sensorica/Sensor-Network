@@ -39,7 +39,7 @@ mqttc.connect("AAU8NJF5D2XBZ.iot.us-west-2.amazonaws.com", port=8883) #AWS IoT s
 mqttc.loop_start()
 
 while True:
-    payload = '{"state":{"reported":{"ambientTemp":24,"glandTemp":22,"throatTemp":23}}}'
+    payload = '{"state":{"reported":{"ambientTemp":24,"glandTemp":22,"throatTemp":23,"loadSensor1":500,"loadSensor2":500}}}'
     #the topic to publish to
     mqttc.publish("$aws/things/leaknet_poc/shadow/update",payload,qos=0)
     time.sleep(2)
