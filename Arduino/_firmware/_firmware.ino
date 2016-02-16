@@ -50,6 +50,15 @@ void drop ()
 {
   drop_occured = true;
 } 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                  Load Sensors 
+const byte LOAD_SENSOR_1 = 14; //A0
+unsigned int load_sensor_1_reading;
+
+const byte LOAD_SENSOR_2 = 15; //A1
+unsigned int load_sensor_2_reading;
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 
 
@@ -117,6 +126,12 @@ void loop()
     drop_occured = false;
     }    
   
+  ////////////////////////////////////////////////////////Tachometer 
+  // Read analog load sensors
+  
+  load_sensor_1_reading = analogRead (LOAD_SENSOR_1);
+  load_sensor_2_reading = analogRead (LOAD_SENSOR_2);
+  
   //////////////////////////////////////////////////////Printing
   
   if (millis() - last_print_time >= PRINT_DELAY){
@@ -128,6 +143,10 @@ void loop()
     data += drop_rate;
     data += ",";
     data += rpm;
+	data += ",";
+	data += load_sensor_1_reading;
+	data += "'";
+	data += load_sensor_2_reading;
     
     Serial.println (data);
     
