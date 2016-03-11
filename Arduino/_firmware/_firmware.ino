@@ -1,8 +1,26 @@
-unsigned int long PRINT_DELAY = 2000; //in milliseconds
-unsigned int long last_print_time = 0;
-String data; 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                           OneWire temperature sensor 
+//                                           SENSOR NETWORK FIRMWARE
+
+// This is the code for the sensor node. It integrates the following SENSORS an prints data to the serial monitor. 
+// 1. Temperature Sensors.
+//      At various locations around the pump
+// 2. Tachometer
+//      Measuring the rpms of the 
+// 3. Load Washers 1 & 2
+// 4. Level Sensor
+
+//The following are driven based on the sensor values:
+// 5. Solenoid Drain Valve
+// 6. The Serial Monitor
+//      The data from each sensor is printed on the serial monitor. The data on the serial monitor will be picked up
+//      by the Zigbee module and will be available on the baseNode
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                           1. TEMPERATURE SENSOR
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
@@ -22,7 +40,7 @@ float ambient_temperature = 0.0;
 float casing_temperature = 0.0;
 int  idle = 0;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                  Tachometer 
+//                                                  2. TACHOMETER
 const byte TACH = 2;
 const byte DURATION = 1;
 volatile boolean revolution_occured = false;
@@ -39,38 +57,49 @@ void revolution ()
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-//                                                 LOAD WASHER
+//                                                 3. LOAD WASHER 1 & 2
 
-int loadWasherPin = A0;
-int analog_load_value = 0;
-double load_in_lbs = 0;
+int loadWasher1Pin = A0;
+int loadWasher2Pin = A1;
 
 //Insert Calibration Data Here: Level = AX + B format (rounded to the nearest integer N)
+//We assume that the two load washers have the same calibration curve
 //X is the applied weight in lbs
 //A is our linear rate in Arduino ADC levels / lbs
 //B is our reference level as applied by the amplifyer circuit
 double A_linear_rate = 0.01;
 double B_reference_level = 483.854;
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-//                                                LEVEL SENSOR
+//Initialize variables
+int analog_load1_value = 0;
+int analog_load2_value = 0;
+double load1_in_lbs = 0;
+double load2_in_lbs = 0;
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+//                                                4. LEVEL SENSOR
+
+int levelSensorPin = A2;
+
+//Insert Calibration Data Here: Level = AX + B format (rounded to the nearest integer N)
+//X is the water depth in cm
+//A is the calibration slope in levels / cm
+//B is the reference level
+double A_water_rate = 11.96;
+double B_water_reference_level = 327.45;
+double vesicle_diameter_cm = 11.43;//4.5 inch x 2.54 cm / inch
+double vesicle_area_cm_2 = (3.14159) * (vesicle_diameter_cm / 2) * (vesicle_diameter_cm / 2);
+
+//Initialize variables
 boolean initialize = true;
-int levelSensorPin = A1;
 int analog_water_level = 0;
 double water_level_cm = 0;
 double flow_calc_water_level_cm = 0;
 unsigned long calc_time_ms = 0;
 
-double vesicle_diameter_cm = 11.43;//4.5 inch x 2.54 cm / inch
-double vesicle_area_cm_2 = (3.14159) * (vesicle_diameter_cm / 2) * (vesicle_diameter_cm / 2);
-
-//Insert Calibration Data Here: Level = AX + B format (rounded to the nearest integer N)
-double A_water_rate = 11.96;
-double B_water_reference_level = 327.45;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-//                                                SOLENOID DRAIN VALVE
+//                                                5. SOLENOID DRAIN VALVE
 
 
 int solenoidValvePin = 14; //Pin controlling the valve
@@ -80,6 +109,15 @@ int close_valve_at_cm_level = 1;
 boolean solenoid_valve_open = false;
 double flow_rate_cc_per_min = 0;
 double water_level_buffer; //The water level buffer is how much the water level should increase before calculating a new flow rate
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                           6. SERIAL MONITOR
+unsigned int long PRINT_DELAY = 2000; //in milliseconds
+unsigned int long last_print_time = 0;
+String data; 
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 
@@ -135,8 +173,10 @@ void loop()
 
 
 //////////////////////////////////////////////////////Load Washer
- analog_load_value = analogRead(loadWasherPin);
- load_in_lbs = ( analog_load_value - B_reference_level ) / A_linear_rate;
+ analog_load1_value = analogRead(loadWasher1Pin);
+ analog_load2_value = analogRead(loadWasher2Pin);
+ load1_in_lbs = ( analog_load1_value - B_reference_level ) / A_linear_rate;
+ load2_in_lbs = ( analog_load2_value - B_reference_level ) / A_linear_rate;
 
  //TODO: Send this value to the cloud for storage and analytics
 
@@ -146,6 +186,7 @@ void loop()
  analog_water_level = analogRead(levelSensorPin);
  water_level_cm = ( analog_water_level - B_water_reference_level ) / A_water_rate;
 
+//Set the reference water level for a calculation (when appropriate)
 if(initialize==true){
   flow_calc_water_level_cm = water_level_cm;
   calc_time_ms = millis();
@@ -165,7 +206,10 @@ if(initialize==true){
 
  if (solenoid_valve_open == false){
   if (water_level_cm >= (flow_calc_water_level_cm + water_level_buffer)){
-   flow_rate_cc_per_min = ( analog_water_level - flow_calc_water_level_cm ) / (millis() - calc_time_ms);
+
+   double water_level_delta = analog_water_level - flow_calc_water_level_cm;
+   unsigned long time_delta = millis() - calc_time_ms;
+   flow_rate_cc_per_min = ( water_level_delta ) / (time_delta);
    flow_calc_water_level_cm = analog_water_level;
   }
  }
@@ -188,7 +232,9 @@ if(initialize==true){
     data += ",";
     data += rpm;
     data += ",";
-    data += load_in_lbs;
+    data += load1_in_lbs;
+    data += ",";
+    data += load2_in_lbs;
     data += ",";
     data += water_level_cm;
     data += ",";
