@@ -67,12 +67,16 @@ int loadWasher2Pin = A1;
 //X is the applied weight in lbs
 //A is our linear rate in Arduino ADC levels / lbs
 //B is our reference level as applied by the amplifyer circuit
-double A_linear_rate = 0.01;
-double B_reference_level = 483.854;
+double A_linear_rate = 0.023;
+double B_reference_level = 405;
 
 //Initialize variables
-int analog_load1_value = 0;
-int analog_load2_value = 0;
+const int load_sample_window = 100;
+double load1_samples[load_sample_window];
+double load2_samples[load_sample_window];
+int index_i=0;
+double load1_value = 0;
+double load2_value = 0;
 double load1_in_lbs = 0;
 double load2_in_lbs = 0;
 
@@ -85,16 +89,16 @@ int levelSensorPin = A2;
 //X is the water depth in cm
 //A is the calibration slope in levels / cm
 //B is the reference level
-double A_water_rate = 11.96;
-double B_water_reference_level = 327.45;
-double vesicle_diameter_cm = 11.43;//4.5 inch x 2.54 cm / inch
-double vesicle_area_cm_2 = (3.14159) * (vesicle_diameter_cm / 2) * (vesicle_diameter_cm / 2);
+float A_water_rate = 12.125;
+float B_water_reference_level = 789.25;
+float vesicle_diameter_cm = 11.43;//4.5 inch x 2.54 cm / inch
+float vesicle_area_cm_2 = (3.14159) * (vesicle_diameter_cm / 2) * (vesicle_diameter_cm / 2);
 
 //Initialize variables
 boolean initialize = true;
 int analog_water_level = 0;
-double water_level_cm = 0;
-double flow_calc_water_level_cm = 0;
+float water_level_cm = 0;
+float flow_calc_water_level_cm = 0;
 unsigned long calc_time_ms = 0;
 
 
@@ -102,13 +106,13 @@ unsigned long calc_time_ms = 0;
 //                                                5. SOLENOID DRAIN VALVE
 
 
-int solenoidValvePin = 14; //Pin controlling the valve
-int drain_at_cm_level = 5; 
-int close_valve_at_cm_level = 1;
+int solenoidValvePin = 5; //Pin controlling the valve
+int drain_at_cm_level = 12.7; //5 inches 
+int close_valve_at_cm_level = 5.08; //2 inches
 
 boolean solenoid_valve_open = false;
-double flow_rate_cc_per_min = 0;
-double water_level_buffer; //The water level buffer is how much the water level should increase before calculating a new flow rate
+float flow_rate_cc_per_min = 0;
+float water_level_buffer=1; //The water level buffer is how much the water level should increase before calculating a new flow rate
 
 
 
@@ -119,11 +123,18 @@ unsigned int long last_print_time = 0;
 String data; 
 
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                           7. SHAFT TEMPERATURE SENSOR
+#define  ClockPin  6  // clock in
+#define  DataPin   7  //data in  
+#define  TestPin   8 //driver pin  set pin low to start deliver data
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 
 void setup()
 {
   Serial.begin(9600);   //Enable serial at high speed 
+  analogReference(EXTERNAL);
   
   // Tachometer setup
   pinMode(solenoidValvePin,OUTPUT);
@@ -140,6 +151,21 @@ void setup()
   sensors.requestTemperatures();
   delayInMillis = 750 / (1 << (3)); 
   lastTempRequest = millis(); 
+
+
+//Initialize load washer samples
+for (int i = 0; i<load_sample_window; i++){
+  load1_samples[i]=0;
+  load2_samples[i]=0;
+
+
+  pinMode(DataPin,INPUT);
+  pinMode(ClockPin,INPUT);
+  pinMode(TestPin,OUTPUT);
+  digitalWrite(TestPin, HIGH);
+  delay(100);
+}
+  
 } 
 
 
@@ -173,10 +199,30 @@ void loop()
 
 
 //////////////////////////////////////////////////////Load Washer
- analog_load1_value = analogRead(loadWasher1Pin);
- analog_load2_value = analogRead(loadWasher2Pin);
- load1_in_lbs = ( analog_load1_value - B_reference_level ) / A_linear_rate;
- load2_in_lbs = ( analog_load2_value - B_reference_level ) / A_linear_rate;
+ 
+ load1_samples[index_i] = analogRead(loadWasher1Pin);
+ load2_samples[index_i] = analogRead(loadWasher2Pin);
+ index_i = (index_i + 1)%load_sample_window;
+
+ load1_value = 0;
+ for (int j = 0; j < load_sample_window; j++){
+  load1_value+= load1_samples[j];
+ }
+ load1_value = load1_value / load_sample_window;
+
+
+ load2_value = 0;
+ for (int j = 0; j < load_sample_window; j++){
+  load2_value+= load2_samples[j];
+ }
+ load2_value = load2_value / load_sample_window;
+
+
+
+
+ 
+ load1_in_lbs = ( load1_value - B_reference_level ) / A_linear_rate;
+ load2_in_lbs = ( load2_value - B_reference_level ) / A_linear_rate;
 
  //TODO: Send this value to the cloud for storage and analytics
 
@@ -187,10 +233,11 @@ void loop()
  water_level_cm = ( analog_water_level - B_water_reference_level ) / A_water_rate;
 
 //Set the reference water level for a calculation (when appropriate)
+
 if(initialize==true){
   flow_calc_water_level_cm = water_level_cm;
   calc_time_ms = millis();
-  initialize==false;
+  initialize=false;
 }
 
  
@@ -204,13 +251,17 @@ if(initialize==true){
   solenoid_valve_open = true;
  }
 
+
+
  if (solenoid_valve_open == false){
+
   if (water_level_cm >= (flow_calc_water_level_cm + water_level_buffer)){
 
-   double water_level_delta = analog_water_level - flow_calc_water_level_cm;
+
+   float water_level_delta = analog_water_level - flow_calc_water_level_cm;
    unsigned long time_delta = millis() - calc_time_ms;
    flow_rate_cc_per_min = ( water_level_delta ) / (time_delta);
-   flow_calc_water_level_cm = analog_water_level;
+//   flow_calc_water_level_cm = analog_water_level;
   }
  }
 
@@ -221,20 +272,31 @@ if(initialize==true){
  }
 
 
+  //////////////////////////////////////////////////////Shaft Temperature 
+  int data_buf[5] = {0};
+  int tempData = 0;
+ 
+  data_read(data_buf);
+  tempData = data_buf[1]*256 + data_buf[2];
+  float realTemp = (float)tempData/16-273.15;
 
   //////////////////////////////////////////////////////Printing
   
   if (millis() - last_print_time >= PRINT_DELAY){
     data = "";
-    data += ambient_temperature;
-    data += ",";
-    data += casing_temperature;
-    data += ",";
+//    data += ambient_temperature;
+//    data += ",";
+//    data += realTemp;
+//    data += ",";
+//    data += casing_temperature;
+//    data += ",";
     data += rpm;
     data += ",";
     data += load1_in_lbs;
     data += ",";
     data += load2_in_lbs;
+    data += ",";
+    data += analog_water_level;
     data += ",";
     data += water_level_cm;
     data += ",";
@@ -244,6 +306,33 @@ if(initialize==true){
     
     last_print_time = millis();
   }
+}
+
+void data_read(int *p)
+{
+  int i,j,PinState,tempData;
+   
+  digitalWrite(TestPin, LOW);
+  for(i=0;i<5;i++)
+  {
+  for(j=0;j<8;j++)
+  {
+    do{
+      PinState = digitalRead(ClockPin);
+    }while(PinState);
+    delayMicroseconds(100);
+    PinState = digitalRead(DataPin);
+    if(1 == PinState)
+      tempData = (tempData<<1 & 0xfe)+1;
+    else
+      tempData = (tempData<<1 & 0xfe);
+    do{
+      PinState = digitalRead(ClockPin);
+    }while(PinState != 1);
+  }
+  *p++ = tempData;
+  }
+  digitalWrite(TestPin, HIGH);
 }
 
 
