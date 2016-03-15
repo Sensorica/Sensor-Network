@@ -68,7 +68,7 @@ int loadWasher2Pin = A1;
 //A is our linear rate in Arduino ADC levels / lbs
 //B is our reference level as applied by the amplifyer circuit
 double A_linear_rate = 0.023;
-double B_reference_level = 405;
+double B_reference_level = 407; //TODO: Reference both load washers seperately
 
 //Initialize variables
 const int load_sample_window = 100;
@@ -89,16 +89,16 @@ int levelSensorPin = A2;
 //X is the water depth in cm
 //A is the calibration slope in levels / cm
 //B is the reference level
-float A_water_rate = 12.125;
-float B_water_reference_level = 789.25;
-float vesicle_diameter_cm = 11.43;//4.5 inch x 2.54 cm / inch
-float vesicle_area_cm_2 = (3.14159) * (vesicle_diameter_cm / 2) * (vesicle_diameter_cm / 2);
+double A_water_rate = 12.125;
+double B_water_reference_level = 789.25;
+double vesicle_diameter_cm = 11.43;//4.5 inch x 2.54 cm / inch
+double vesicle_area_cm_2 = (3.14159) * (vesicle_diameter_cm / 2) * (vesicle_diameter_cm / 2);
 
 //Initialize variables
 boolean initialize = true;
 int analog_water_level = 0;
-float water_level_cm = 0;
-float flow_calc_water_level_cm = 0;
+double water_level_cm = 0;
+double flow_calc_water_level_cm = 0;
 unsigned long calc_time_ms = 0;
 
 
@@ -107,7 +107,7 @@ unsigned long calc_time_ms = 0;
 
 
 int solenoidValvePin = 5; //Pin controlling the valve
-int drain_at_cm_level = 12.7; //5 inches 
+int drain_at_cm_level = 12; //5 inches 
 int close_valve_at_cm_level = 5.08; //2 inches
 
 boolean solenoid_valve_open = false;
@@ -217,6 +217,7 @@ void loop()
  }
  load2_value = load2_value / load_sample_window;
 
+//random change
 
 
 
@@ -251,8 +252,6 @@ if(initialize==true){
   solenoid_valve_open = true;
  }
 
-
-
  if (solenoid_valve_open == false){
 
   if (water_level_cm >= (flow_calc_water_level_cm + water_level_buffer)){
@@ -261,7 +260,7 @@ if(initialize==true){
    float water_level_delta = analog_water_level - flow_calc_water_level_cm;
    unsigned long time_delta = millis() - calc_time_ms;
    flow_rate_cc_per_min = ( water_level_delta ) / (time_delta);
-//   flow_calc_water_level_cm = analog_water_level;
+   flow_calc_water_level_cm = analog_water_level;
   }
  }
 
@@ -273,23 +272,22 @@ if(initialize==true){
 
 
   //////////////////////////////////////////////////////Shaft Temperature 
-  int data_buf[5] = {0};
-  int tempData = 0;
- 
-  data_read(data_buf);
-  tempData = data_buf[1]*256 + data_buf[2];
-  float realTemp = (float)tempData/16-273.15;
+//  int data_buf[5] = {0};
+//  int tempData = 0;
+// 
+//  data_read(data_buf);
+//  tempData = data_buf[1]*256 + data_buf[2];
+//  float realTemp = (float)tempData/16-273.15;
 
   //////////////////////////////////////////////////////Printing
-  
   if (millis() - last_print_time >= PRINT_DELAY){
     data = "";
-//    data += ambient_temperature;
-//    data += ",";
+    data += ambient_temperature;
+    data += ",";
 //    data += realTemp;
 //    data += ",";
-//    data += casing_temperature;
-//    data += ",";
+    data += casing_temperature;
+    data += ",";
     data += rpm;
     data += ",";
     data += load1_in_lbs;
