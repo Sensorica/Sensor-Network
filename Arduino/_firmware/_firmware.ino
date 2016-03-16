@@ -55,13 +55,14 @@ float shaftTemp = 0.0;
 void data_read(int *p)
 {
   int i,j,PinState,tempData;   
+  unsigned long time_check=millis();
   digitalWrite(TestPin, LOW);              //start device transmission
   for(i=0;i<5;i++) {                       //read 5 bytes
     for(j=0;j<8;j++){                      //read 8 bits
       do{
         PinState = digitalRead(ClockPin);
       } while(PinState);                   //sync to clock by waiting for change to LOW 
-      delayMicroseconds(100);              //buffer
+      delayMicroseconds(100); //buffer
       PinState = digitalRead(DataPin);     //read data bit
       if(1 == PinState)                    
         tempData = (tempData<<1 & 0xfe)+1; //add 1
@@ -69,6 +70,11 @@ void data_read(int *p)
         tempData = (tempData<<1 & 0xfe);   //add 0
       do{
         PinState = digitalRead(ClockPin);  //get stuck until clock changes
+        
+        if ((millis() - time_check) >= 2000){//Haha, let's NOT get stuck if the thing is unplugged
+//          Serial.println("break at 20ms");
+          break;
+        }
       }while(PinState != 1);
     }
   *p++ = tempData;                         //pass byte to array pointer address 
@@ -79,12 +85,12 @@ void data_read(int *p)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                  3. TACHOMETER
 const byte TACH = 2;
-const byte DURATION = 1;
+double duration = 1;
 volatile boolean revolution_occured = false;   
-unsigned int revolution_count = 0;
+double revolution_count = 0;
 unsigned int current_time = 0;
 unsigned int previous_time = 0;
-unsigned int rpm = 0;
+double rpm = 0;
 
 // Tachometer Interrupt Service Routine (ISR)
 
@@ -104,13 +110,16 @@ int loadWasher2Pin = A1;
 //A is our linear rate in Arduino ADC levels / lbs
 //B is our reference level as applied by the amplifyer circuit
 double A_linear_rate = 0.023;
-double B_reference_level = 407; //TODO: Reference both load washers seperately
+//double B_reference_level = 407; //Reference level without the IR sensor
+double B_reference_level = 352; // Reference level with the IR sensor
+//TODO: Reference both load washers seperately
 
 //Initialize variables
 const int load_sample_window = 100;
 double load1_samples[load_sample_window];
 double load2_samples[load_sample_window];
-int index_i=0;
+int index_load=0;
+int index_water=0;
 double load1_value = 0;
 double load2_value = 0;
 double load1_in_lbs = 0;
@@ -133,6 +142,8 @@ double vesicle_area_cm_2 = (3.14159) * (vesicle_diameter_cm / 2) * (vesicle_diam
 //Initialize variables
 boolean initialize = true;
 int analog_water_level = 0;
+const int water_level_sample_window = 20;
+double water_level_samples[water_level_sample_window];
 double water_level_cm = 0;
 double flow_calc_water_level_cm = 0;
 unsigned long calc_time_ms = 0;
@@ -147,7 +158,7 @@ int drain_at_cm_level = 12; //5 inches
 int close_valve_at_cm_level = 5.08; //2 inches
 
 boolean solenoid_valve_open = false;
-float flow_rate_cc_per_min = 0;
+float flow_rate_cc_per_sec = 0;
 float water_level_buffer=1; //The water level buffer is how much the water level should increase before calculating a new flow rate
 
 
@@ -164,13 +175,14 @@ String data;
 
 void setup()
 {
+  
   Serial.begin(9600);        //Enable serial at high speed 
   analogReference(EXTERNAL); //Important or we send 5V into the 3V3 pin!
   
   // Tachometer setup
   pinMode(solenoidValvePin,OUTPUT);
   digitalWrite (TACH, HIGH);  // internal pull-up resistor built in :-)
-  attachInterrupt (0, revolution, RISING);  // attach interrupt handler for tachometer
+  attachInterrupt (digitalPinToInterrupt(2), revolution, RISING);  // attach interrupt handler for tachometer
   
   // OneWire sensor setup
   sensors.begin();
@@ -186,10 +198,15 @@ void setup()
   lastTempRequest = millis(); 
 
 
-  //Initialize load washer samples
+  //Initialize load washer samples array
   for (int i = 0; i<load_sample_window; i++){
     load1_samples[i]=0;
     load2_samples[i]=0;
+  }
+
+  //Initialize the water level samples array
+  for (int i = 0; i<water_level_sample_window; i++){
+    water_level_samples[i]=0;
   }
 	
 	
@@ -205,6 +222,11 @@ void setup()
 
 void loop()
 {
+
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////// ZERO DELAY LOOP ////////////////////////////////////////////////////
+  // NOTE: DO NOT ADD FUNCTIONS THAT ADD DELAYS OR BLOCK INTERRUPTS HERE
+  
    ////////////////////////////////////////////////////////Tachometer 
    // Check if tach was triggered
    if (revolution_occured) {
@@ -212,71 +234,40 @@ void loop()
      revolution_occured = !revolution_occured;
    }   
  
-   // Calculate RPM
-   current_time = millis();
-   if (current_time - previous_time >= 1000) {
-     rpm = (revolution_count / DURATION * 60);
-     previous_time = current_time;
-     revolution_count = 0;
-   } 
   
-  /////////////////////////////////////////////////////////Temperature
-  
-  if (millis() - lastTempRequest >= delayInMillis) {    // waited long enough??
-    ambient_temperature = sensors.getTempCByIndex(0);
-    casing_temperature = sensors.getTempCByIndex(1);
-	gland_temperature = sensors.getTempCByIndex (2);
-    sensors.requestTemperatures(); 
-    delayInMillis = 750 / (1 << (3));
-    lastTempRequest = millis(); 
-  }
-
-
   //////////////////////////////////////////////////////Load Washer
- 
-<<<<<<< HEAD
- load1_samples[index_i] = analogRead(loadWasher1Pin);
- load2_samples[index_i] = analogRead(loadWasher2Pin);
- index_i = (index_i + 1)%load_sample_window;
 
- load1_value = 0;
- for (int j = 0; j < load_sample_window; j++){
-  load1_value+= load1_samples[j];
- }
- load1_value = load1_value / load_sample_window;
-
-
- load2_value = 0;
- for (int j = 0; j < load_sample_window; j++){
-  load2_value+= load2_samples[j];
- }
- load2_value = load2_value / load_sample_window;
-
-//random change
-
-
-=======
-  load1_samples[index_i] = analogRead(loadWasher1Pin);
-  load2_samples[index_i] = analogRead(loadWasher2Pin);
-  index_i = (index_i + 1)%load_sample_window;
->>>>>>> e1b3d6602476759f24ffb7383ad03d9ea856d1f8
+ //Take the samples each loop - Averaging done in the interrupt
+ load1_samples[index_load] = analogRead(loadWasher1Pin);
+ load2_samples[index_load] = analogRead(loadWasher2Pin);
+ index_load = (index_load + 1)%load_sample_window;
 
  
   //////////////////////////////////////////////////////Water Level Sensor
  
-<<<<<<< HEAD
+
  analog_water_level = analogRead(levelSensorPin);
- water_level_cm = ( analog_water_level - B_water_reference_level ) / A_water_rate;
 
-//Set the reference water level for a calculation (when appropriate)
+// Stores samples
+ water_level_samples[index_water] = ( analog_water_level - B_water_reference_level ) / A_water_rate;
 
+////take the average over the window
+//if(index_water==0){
+ for (int i = 0 ; i< water_level_sample_window; i++){
+  water_level_cm+= water_level_samples[index_water];
+ }
+ water_level_cm = water_level_cm / water_level_sample_window;
+//}
+ 
+ index_water = index_water%water_level_sample_window;
+
+////Set the reference water level for a calculation (when appropriate)
 if(initialize==true){
+  Serial.println("Re-initializing water states");
   flow_calc_water_level_cm = water_level_cm;
   calc_time_ms = millis();
   initialize=false;
 }
-
- 
 
  //////////////////////////////////////////////////////Solenoid Drain Valve
 
@@ -287,55 +278,58 @@ if(initialize==true){
   solenoid_valve_open = true;
  }
 
- if (solenoid_valve_open == false){
 
+//Calculate the flow rate
+ if (solenoid_valve_open == false){ 
   if (water_level_cm >= (flow_calc_water_level_cm + water_level_buffer)){
+    Serial.println("CALCULATION TRIGGERED!");
+   double water_level_delta = water_level_cm - flow_calc_water_level_cm;
+   double time_delta = millis() - calc_time_ms;
+   Serial.println(water_level_delta);
+   Serial.println(time_delta/1000);
+   flow_rate_cc_per_sec = ( water_level_delta ) / (time_delta/1000);
 
-
-   float water_level_delta = analog_water_level - flow_calc_water_level_cm;
-   unsigned long time_delta = millis() - calc_time_ms;
-   flow_rate_cc_per_min = ( water_level_delta ) / (time_delta);
-   flow_calc_water_level_cm = analog_water_level;
+   //set the last calculation references
+   flow_calc_water_level_cm = water_level_cm;
+   calc_time_ms = millis();
   }
  }
 
-  if (water_level_cm <= close_valve_at_cm_level){
+  if (solenoid_valve_open == true && water_level_cm <= close_valve_at_cm_level){
   digitalWrite(solenoidValvePin,LOW);
   solenoid_valve_open = false;
   initialize=true;
  }
 
 
-  //////////////////////////////////////////////////////Shaft Temperature 
-//  int data_buf[5] = {0};
-//  int tempData = 0;
-// 
-//  data_read(data_buf);
-//  tempData = data_buf[1]*256 + data_buf[2];
-//  float realTemp = (float)tempData/16-273.15;
 
-  //////////////////////////////////////////////////////Printing
-  if (millis() - last_print_time >= PRINT_DELAY){
-    data = "";
-    data += ambient_temperature;
-    data += ",";
-//    data += realTemp;
-//    data += ",";
-    data += casing_temperature;
-    data += ",";
-=======
-  analog_water_level = analogRead(levelSensorPin);
-  water_level_cm = ( analog_water_level - B_water_reference_level ) / A_water_rate;
-   
+//END OF ZERO DELAY LOOP
   
-  
-  //////////////////////////////////////////////////////Printing 
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////DELAY LOOPS  //////////////////////////////////////////////////////////
+  // Note: ALL CODE THAT HAS A DELAY SHOULD GO HERE!!!
   // Every PRINT_DELAY, disable ISR and do calculations which otherwise block the flow of the main loop,
   // including printing to serial that sends data to relay node.
   
-  
+
   if (millis() - last_print_time >= PRINT_DELAY){
-    detachInterrupt (0);  // disable tachometer interrupt
+    detachInterrupt(0);
+     duration = millis() - last_print_time;
+     rpm = revolution_count / (duration/1000) * 60 ;
+     revolution_count = -1;
+
+
+ /////////////////////////////////////////////////////////One-Wire Temperature Sensors
+  
+  if (millis() - lastTempRequest >= delayInMillis) {    // waited long enough??
+    ambient_temperature = sensors.getTempCByIndex(0);
+    casing_temperature = sensors.getTempCByIndex(1);
+  gland_temperature = sensors.getTempCByIndex (2);
+    sensors.requestTemperatures(); 
+    delayInMillis = 750 / (1 << (3));
+    lastTempRequest = millis(); 
+  }
+     
 	
 	//////////////////////////////////////////////////////Calculate load washer averages - ??? ms
 	load1_value = 0;
@@ -360,67 +354,36 @@ if(initialize==true){
     tempData = data_buf[1]*256 + data_buf[2];
     shaftTemp = (float)tempData/16-273.15;
 	
-	//////////////////////////////////////////////////////Solenoid Drain Valve - ??? ms
-    //Start the drain if the water level is too high
-    if(water_level_cm >= drain_at_cm_level){
-      //TODO: If water level is way too high, then water is accumulating so send the operator a warning message
-      digitalWrite(solenoidValvePin,HIGH);
-      solenoid_valve_open = true;
-    }
-
-   if (solenoid_valve_open == false){
-     if (water_level_cm >= (flow_calc_water_level_cm + water_level_buffer)){
-       float water_level_delta = analog_water_level - flow_calc_water_level_cm;
-       unsigned long time_delta = millis() - calc_time_ms;
-       flow_rate_cc_per_min = ( water_level_delta ) / (time_delta);
-       //   flow_calc_water_level_cm = analog_water_level;
-     }
-   }
-
-   if (water_level_cm <= close_valve_at_cm_level){
-     digitalWrite(solenoidValvePin,LOW);
-     solenoid_valve_open = false;
-     initialize=true;
-   }
-	
-	///////////////////////////////////////////////////////Water lever sensor calculations - ??? ms
-	//Set the reference water level for a calculation (when appropriate)
-    if(initialize==true){
-      flow_calc_water_level_cm = water_level_cm;
-      calc_time_ms = millis();
-      initialize=false;
-    }
-	
 	
 	//////////////////////////////////////////////////////Printing 	  
-	data = "";
+	  data = "";
     data += shaftTemp;
     data += ",";
-	data += ambient_temperature;
+	  data += ambient_temperature;
     data += ",";
     data += casing_temperature;
     data += ",";
-	data += gland_temperature;
-	data += "'";
->>>>>>> e1b3d6602476759f24ffb7383ad03d9ea856d1f8
+	  data += gland_temperature;
+	  data += ",";
     data += rpm;
     data += ",";
     data += load1_in_lbs;
     data += ",";
     data += load2_in_lbs;
     data += ",";
-    data += analog_water_level;
-    data += ",";
     data += water_level_cm;
     data += ",";
-    data += flow_rate_cc_per_min;
+    data += flow_rate_cc_per_sec;    
     
     Serial.println (data);
-    	
-	attachInterrupt (0, revolution, RISING);  // re-attach interrupt handler for tachometer
+
+    //////////////////////////////////////////////////////Go back to Zero Delay Loop
+	  attachInterrupt (0, revolution, RISING);  // re-attach interrupt handler for tachometer
     last_print_time = millis();
   }
 }
+
+
 
 
 
