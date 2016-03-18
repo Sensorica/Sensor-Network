@@ -9,13 +9,12 @@
 //      Measuring the rpms of the motor shaft
 // 4. Load Washers 1 & 2
 // 5. Level Sensor
-//
+
 //The following are driven based on the sensor values:
 // 5. Solenoid Drain Valve
 // 6. The Serial Monitor
 //      The data from each sensor is printed on the serial monitor. The data on the serial monitor will be picked up
 //      by the Zigbee module and automatically transmitted to the base node. (Remember to toggle switch on shield to SERIAL) 
-
 
 
 
@@ -110,12 +109,11 @@ int loadWasher2Pin = A1;
 //A is our linear rate in Arduino ADC levels / lbs
 //B is our reference level as applied by the amplifyer circuit
 double A_linear_rate = 0.023;
-//double B_reference_level = 407; //Reference level without the IR sensor
-double B_reference_level = 352; // Reference level with the IR sensor
-//TODO: Reference both load washers seperately
+double B_reference_level1 = 357; // Reference level for load1
+double B_reference_level2 = 352; // Reference level for load2
 
 //Initialize variables
-const int load_sample_window = 100;
+const int load_sample_window = 70;
 double load1_samples[load_sample_window];
 double load2_samples[load_sample_window];
 int index_load=0;
@@ -142,7 +140,7 @@ double vesicle_area_cm_2 = (3.14159) * (vesicle_diameter_cm / 2) * (vesicle_diam
 //Initialize variables
 boolean initialize = true;
 int analog_water_level = 0;
-const int water_level_sample_window = 20;
+const int water_level_sample_window = 30;
 double water_level_samples[water_level_sample_window];
 double water_level_cm = 0;
 double flow_calc_water_level_cm = 0;
@@ -344,8 +342,8 @@ if(initialize==true){
       }
     load2_value = load2_value / load_sample_window;
  
-    load1_in_lbs = ( load1_value - B_reference_level ) / A_linear_rate;
-    load2_in_lbs = ( load2_value - B_reference_level ) / A_linear_rate;
+    load1_in_lbs = ( load1_value - B_reference_level1 ) / A_linear_rate;
+    load2_in_lbs = ( load2_value - B_reference_level2 ) / A_linear_rate;
 		
     //////////////////////////////////////////////////////Shaft Temperature - 460 ms
     int data_buf[5] = {0};
