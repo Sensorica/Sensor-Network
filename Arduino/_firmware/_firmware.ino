@@ -170,6 +170,63 @@ String data;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+//                                              8. FLOW SENSOR
+
+
+// which pin to use for reading the sensor? can use any pin!
+#define FLOWSENSORPIN 3
+
+// count how many pulses!
+volatile uint16_t pulses = 0;
+long int last_pulses = 0;
+// track the state of the pulse pin
+volatile uint8_t lastflowpinstate;
+// you can try to keep time of how long it is between pulses
+volatile uint32_t lastflowratetimer = 0;
+// and use that to calculate a flow rate
+volatile float flowrate;
+// Interrupt is called once a millisecond, looks for any pulses from the sensor!
+float liters = 0;
+bool flowTrigger = false;
+
+
+//SIGNAL(TIMER0_COMPA_vect) {
+//  uint8_t x = digitalRead(FLOWSENSORPIN);
+//  
+//  if (x == lastflowpinstate) {
+//    lastflowratetimer++;
+//    return; // nothing changed!
+//  }
+//  
+//  if (x == HIGH) {
+//    //low to high transition!
+//    pulses++;
+//  }
+//  lastflowpinstate = x;
+//  flowrate = 1000.0;
+//  flowrate /= lastflowratetimer;  // in hertz
+//  lastflowratetimer = 0;
+//}
+
+
+void flowCalc(){
+  flowTrigger = true;
+}
+
+//void useInterrupt(boolean v) {
+//  if (v) {
+//    // Timer0 is already used for millis() - we'll just interrupt somewhere
+//    // in the middle and call the "Compare A" function above
+//    OCR0A = 0xAF;
+//    TIMSK0 |= _BV(OCIE0A);
+//  } else {
+//    // do not call the interrupt function COMPA anymore
+//    TIMSK0 &= ~_BV(OCIE0A);
+//  }
+//}
+
+
+
 
 void setup()
 {
@@ -181,6 +238,7 @@ void setup()
   pinMode(solenoidValvePin,OUTPUT);
   digitalWrite (TACH, HIGH);  // internal pull-up resistor built in :-)
   attachInterrupt (digitalPinToInterrupt(2), revolution, RISING);  // attach interrupt handler for tachometer
+  attachInterrupt (digitalPinToInterrupt(3), flowCalc, RISING);  // attach interrupt handler for flow meter
   
   // OneWire sensor setup
   sensors.begin();
@@ -213,8 +271,17 @@ void setup()
   pinMode(ClockPin,INPUT);
   pinMode(TestPin,OUTPUT);
   digitalWrite(TestPin, HIGH);
-  delay(100);
   
+
+
+
+  //Liquid Flow Sensor Setup
+   pinMode(FLOWSENSORPIN, INPUT);
+   digitalWrite(FLOWSENSORPIN, HIGH);
+   lastflowpinstate = digitalRead(FLOWSENSORPIN);
+//   useInterrupt(true);
+
+   delay(100);
 } 
 
 
@@ -299,6 +366,31 @@ if(initialize==true){
   initialize=true;
  }
 
+ //////////////////////////////////////////////////////Flow Rate Sensor
+
+
+//   Serial.print("Freq: "); Serial.println(flowrate);
+//  Serial.print("Pulses: "); Serial.println(pulses, DEC);
+  
+  // if a plastic sensor use the following calculation
+  // Sensor Frequency (Hz) = 7.5 * Q (Liters/min)
+  // Liters = Q * time elapsed (seconds) / 60 (seconds/minute)
+  // Liters = (Frequency (Pulses/second) / 7.5) * time elapsed (seconds) / 60
+  // Liters = Pulses / (7.5 * 60)
+
+if (flowTrigger){
+  pulses++;
+  flowTrigger = !flowTrigger;
+}
+
+  
+  liters = pulses;
+  liters /= 7.5;
+  liters /= 60.0;
+
+//  Serial.print(liters); Serial.println(" Liters");
+ 
+
 
 
 //END OF ZERO DELAY LOOP
@@ -312,9 +404,15 @@ if(initialize==true){
 
   if (millis() - last_print_time >= PRINT_DELAY){
     detachInterrupt(0);
+    detachInterrupt(1);
      duration = millis() - last_print_time;
      rpm = revolution_count / (duration/1000) * 60 ;
-     revolution_count = -1;
+     revolution_count = 0;
+
+//  flow rate code
+    flowrate = (pulses - last_pulses) / (duration/1000) ;
+    last_pulses = pulses;
+    
 
 
  /////////////////////////////////////////////////////////One-Wire Temperature Sensors
@@ -371,13 +469,21 @@ if(initialize==true){
     data += ",";
     data += water_level_cm;
     data += ",";
-    data += flow_rate_cc_per_sec;    
+    data += flow_rate_cc_per_sec;
+    data += ",";
+    data += flowrate;    
+    data += ",";
+    data += liters;        
     
     Serial.println (data);
 
     //////////////////////////////////////////////////////Go back to Zero Delay Loop
 	  attachInterrupt (0, revolution, RISING);  // re-attach interrupt handler for tachometer
+   attachInterrupt (1, flowCalc, RISING);  // re-attach interrupt handler for tachometer
     last_print_time = millis();
+    revolution_occured = false;
+    //pulses = 0;
+    lastflowratetimer = 0;
   }
 }
 
