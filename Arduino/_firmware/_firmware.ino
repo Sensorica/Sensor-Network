@@ -1,18 +1,22 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                           SENSOR NETWORK FIRMWARE
 //
-// This is the code for the sensor node. It integrates the following SENSORS an prints data to the serial monitor. 
+// This is the code for the sensor node. It integrates the following SENSORS/ACTUATORS 
+//  and prints data to the serial monitor. 
 // 1. Temperature Sensors.
 //      At various locations around the pump
 // 2. Shaft Temperature Sensor
+//      This uses an IR temperature sensor and is measured with an interrupt on the rising edge of 
+//      the sensor's waveform.
 // 3. Tachometer
-//      Measuring the rpms of the motor shaft
+//      Measuring the rpms of the motor shaft. It has an optical sensor that measures the black mark
+//      on the rotating shaft to determine each revolution. It also triggers an interrupt on the rising 
+//      edge of the sensor's waveform.
 // 4. Load Washers 1 & 2
 // 5. Level Sensor
-
-//The following are driven based on the sensor values:
-// 5. Solenoid Drain Valve
-// 6. The Serial Monitor
+// 6. Solenoid Drain Valve
+// 7. The Serial Monitor
+// 8. Flow Sensor. 
 //      The data from each sensor is printed on the serial monitor. The data on the serial monitor will be picked up
 //      by the Zigbee module and automatically transmitted to the base node. (Remember to toggle switch on shield to SERIAL) 
 
@@ -189,43 +193,15 @@ volatile float flowrate;
 float liters = 0;
 bool flowTrigger = false;
 
-
-//SIGNAL(TIMER0_COMPA_vect) {
-//  uint8_t x = digitalRead(FLOWSENSORPIN);
-//  
-//  if (x == lastflowpinstate) {
-//    lastflowratetimer++;
-//    return; // nothing changed!
-//  }
-//  
-//  if (x == HIGH) {
-//    //low to high transition!
-//    pulses++;
-//  }
-//  lastflowpinstate = x;
-//  flowrate = 1000.0;
-//  flowrate /= lastflowratetimer;  // in hertz
-//  lastflowratetimer = 0;
-//}
-
-
 void flowCalc(){
   flowTrigger = true;
 }
 
-//void useInterrupt(boolean v) {
-//  if (v) {
-//    // Timer0 is already used for millis() - we'll just interrupt somewhere
-//    // in the middle and call the "Compare A" function above
-//    OCR0A = 0xAF;
-//    TIMSK0 |= _BV(OCIE0A);
-//  } else {
-//    // do not call the interrupt function COMPA anymore
-//    TIMSK0 &= ~_BV(OCIE0A);
-//  }
-//}
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+//                                              9. NODE METADATA
 
+long int NODE_ID = 1;
 
 
 void setup()
@@ -453,6 +429,8 @@ if (flowTrigger){
 	
 	//////////////////////////////////////////////////////Printing 	  
 	  data = "";
+    data += NODE_ID;
+    data += ",";
     data += shaftTemp;
     data += ",";
 	  data += ambient_temperature;
