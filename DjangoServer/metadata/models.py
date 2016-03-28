@@ -28,3 +28,12 @@ class Node(models.Model):
         return self.node_name
 
 
+class TestDatapoint(models.Model):
+    models.ForeignKey(Node,on_delete=models.CASCADE)
+    data_id = models.IntegerField()
+    data_name = models.CharField(max_length=200)
+    temperature = models.FloatField()
+    rpm = models.IntegerField()
+
+
+
