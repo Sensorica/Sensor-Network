@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'metadata.apps.MetadataConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -75,6 +76,7 @@ WSGI_APPLICATION = 'DjangoServer.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
+# TODO: SETUP DynamoDB as our database so everything can be stored in the same place
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
