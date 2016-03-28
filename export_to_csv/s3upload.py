@@ -1,5 +1,5 @@
 import boto.s3
-import config_file
+import config_file #This is a file that stores our API keys and will not be pushed to git for obvious reasons
 
 
 conn = boto.connect_s3(aws_access_key_id=config_file.AWS_ACCESS_KEY,
