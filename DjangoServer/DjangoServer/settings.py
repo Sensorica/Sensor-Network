@@ -134,7 +134,7 @@ STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static_in_pro','our_stati
 
 # Used in development with django for where we store our files during development
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'templates','freeboard'),
+    os.path.join(BASE_DIR, 'static_in_pro','our_static'),
     # os.path.join(BASE_DIR, 'static_git'), #TODO: Point to all of our static files, including freeboard and list it here
 )
 
