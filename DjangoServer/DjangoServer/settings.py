@@ -130,7 +130,7 @@ STATIC_URL = '/static_in_pro/'
 
 # Used in deployment for where our files are served, collectstatic will push static files to here
 # This could be an S3 bucket in production
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static_git','static_root')
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static_in_pro','our_static')
 
 # Used in development with django for where we store our files during development
 STATICFILES_DIRS = (
