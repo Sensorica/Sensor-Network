@@ -2,70 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5fb1e3ea-24c2-4768-bc0c-d29b398c623e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/templates/base.html" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\css\base.css" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\css\changelists.css" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\css\dashboard.css" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\css\fonts.css" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\css\forms.css" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\css\login.css" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\css\rtl.css" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\css\widgets.css" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\fonts\LICENSE.txt" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\fonts\README.txt" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\fonts\Roboto-Bold-webfont.woff" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\fonts\Roboto-Light-webfont.woff" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\fonts\Roboto-Regular-webfont.woff" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\LICENSE" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\README.txt" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\calendar-icons.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\gis\move_vertex_off.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\gis\move_vertex_on.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\icon-addlink.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\icon-alert.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\icon-calendar.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\icon-changelink.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\icon-clock.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\icon-deletelink.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\icon-no.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\icon-unknown-alt.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\icon-unknown.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\icon-yes.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\inline-delete.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\search.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\selector-icons.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\sorting-icons.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\tooltag-add.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\img\tooltag-arrowright.svg" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\SelectBox.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\SelectFilter2.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\actions.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\actions.min.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\admin\DateTimeShortcuts.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\admin\RelatedObjectLookups.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\calendar.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\collapse.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\collapse.min.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\core.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\inlines.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\inlines.min.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\jquery.init.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\prepopulate.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\prepopulate.min.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\timeparse.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\urlify.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\vendor\jquery\LICENSE-JQUERY.txt" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\vendor\jquery\jquery.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\vendor\jquery\jquery.min.js" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\vendor\xregexp\LICENSE-XREGEXP.txt" afterPath="" />
-      <change type="DELETED" beforePath="C:\Users\scott\Documents\Sensor-Network\DjangoServer\admin\js\vendor\xregexp\xregexp.min.js" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/DjangoServer.iml" afterPath="$PROJECT_DIR$/.idea/DjangoServer.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../Arduino/_firmware/_firmware.ino" afterPath="$PROJECT_DIR$/../Arduino/_firmware/_firmware.ino" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/requirements.txt" afterPath="$PROJECT_DIR$/requirements.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DjangoServer/settings.py" afterPath="$PROJECT_DIR$/DjangoServer/settings.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/metadata/urls.py" afterPath="$PROJECT_DIR$/metadata/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/metadata/views.py" afterPath="$PROJECT_DIR$/metadata/views.py" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/our_static/freeboard" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="DjangoServer.iws" />
@@ -715,7 +652,7 @@
     <frame x="0" y="0" width="1470" height="984" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22198582" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22198582" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -723,7 +660,7 @@
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26173708" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.26173708" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
