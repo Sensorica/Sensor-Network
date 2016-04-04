@@ -5,4 +5,7 @@ from django.http import HttpResponse
 
 
 def index(request):
-    return HttpResponse("Welcome to metadata")
+    context = {
+        "title": "Hello there!"
+    }
+    return render(request, "base.html",context)

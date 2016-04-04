@@ -119,16 +119,25 @@ USE_L10N = True
 USE_TZ = True
 
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-MEDIA_URL = '/media/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-STATIC_ROOT = 'static/'
 
-STATIC_URL = '/static/'
 
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'static')
-# )
+STATIC_URL = '/static_in_pro/'
+# STATIC_URL = '/does_this_matter/' #You could just as easily put this as your static URL, it will still point to your STATIC_ROOT directory
+
+# Used in deployment for where our files are served, collectstatic will push static files to here
+# This could be an S3 bucket in production
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static_git','static_root')
+
+# Used in development with django for where we store our files during development
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static_in_pro','our_static'),
+    # os.path.join(BASE_DIR, 'static_git'), #TODO: Point to all of our static files, including freeboard and list it here
+)
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'my_media')
+
+MEDIA_URL = '/media/'

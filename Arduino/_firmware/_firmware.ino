@@ -104,8 +104,8 @@ void revolution (){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 //                                                 4. LOAD WASHER 1 & 2
 
-int loadWasher1Pin = A0;
-int loadWasher2Pin = A1;
+int loadWasher1Pin = A4;
+int loadWasher2Pin = A5;
 
 //Insert Calibration Data Here: Level = AX + B format (rounded to the nearest integer N)
 //We assume that the two load washers have the same calibration curve
@@ -113,8 +113,8 @@ int loadWasher2Pin = A1;
 //A is our linear rate in Arduino ADC levels / lbs
 //B is our reference level as applied by the amplifyer circuit
 double A_linear_rate = 0.023;
-double B_reference_level1 = 357; // Reference level for load1
-double B_reference_level2 = 352; // Reference level for load2
+double B_reference_level1 = 435; // Reference level for load1
+double B_reference_level2 = 435; // Reference level for load2
 
 //Initialize variables
 const int load_sample_window = 70;
@@ -445,13 +445,10 @@ if (flowTrigger){
     data += ",";
     data += load2_in_lbs;
     data += ",";
-    data += water_level_cm;
-    data += ",";
     data += flow_rate_cc_per_sec;
     data += ",";
-    data += flowrate;    
-    data += ",";
-    data += liters;        
+    data += flowrate;
+        
     
     Serial.println (data);
 
