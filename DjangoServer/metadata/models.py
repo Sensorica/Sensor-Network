@@ -1,114 +1,178 @@
 from django.db import models
+import datetime
 
 
 # Create your models here.
 class Nodeowner(models.Model):
-    node_owner_id = models.IntegerField()
-    owner_name = models.CharField(max_length=200)
+    node_owner_id = models.IntegerField(default=0)
+    owner_name = models.CharField(max_length=200, default="NA")
 
     def __str__(self):
         return self.owner_name
 
+class Pump(models.Model):
+    #IDs
+    nodeowner = models.ForeignKey(Nodeowner,on_delete=models.CASCADE)
+    customer_id = models.IntegerField(default=0)
+    pump_name = models.CharField(max_length=200,default='')
+    customer_equipment_id = models.IntegerField(default=0)
+
+    #pump static metadata
+    pump_serial_number = models.IntegerField(default=0)
+    pump_manufacturer = models.CharField(max_length=200,default='')
+    pump_model = models.CharField(max_length=200,default='')
+    pump_size_x = models.IntegerField(default=0)
+    pump_size_y = models.IntegerField(default=0)
+    motor_hp = models.FloatField(default=0)
+    rpm_rating = models.IntegerField(default=0)
+    is_variable_speed = models.BooleanField(default=False)
+    motor_voltage_rating = models.FloatField(default=0)
+    motor_amperage_rating = models.FloatField(default=0)
+    imp_size_inches = models.FloatField(default=0)
+    shaft_OR_sleeve_OD = models.FloatField(default=0)
+    stuffing_box_OD = models.FloatField(default=0)
+    packing_ring_UOM = models.FloatField(default=0)
+    lantern_flush_fluid_type = models.CharField(max_length=200,default='')
+    packing_X_section_DIM1 = models.FloatField(default=0)
+    packing_X_section_DIM2 = models.FloatField(default=0)
+    packing_ring_shape = models.CharField(max_length=200,default='')
+    packing_ring_material1 = models.CharField(max_length=200,default='')
+    packing_ring_material2 = models.CharField(max_length=200,default='')
+    packing_ring_material3 = models.CharField(max_length=200,default='')
+    packing_ring_material4 = models.CharField(max_length=200,default='')
+    packing_ring_material5 = models.CharField(max_length=200,default='')
+    packing_ring_material6 = models.CharField(max_length=200,default='')
+    has_lantern_ring = models.BooleanField(default=False)
+    lantern_ring_position = models.CharField(max_length=200,default='')
+    lantern_flush_volume_flow = models.FloatField(default=0)
+    lantern_ring_fluid_pressure = models.FloatField(default=0)
+    has_gasket_separator = models.BooleanField(default=False)
+    has_throat_brushing = models.BooleanField(default=False)
+    lantern_ring_width_inches = models.FloatField(default=0)
+    number_of_packing_rings = models.IntegerField(default=0)
+    packing_style_used = models.CharField(max_length=200,default='')
+    pump_location_gps_latitude = models.FloatField(default=0)
+    pump_location_gps_longitude = models.FloatField(default=0)
+    pump_location_gps_altitude = models.FloatField(default=0)
+    sleeve_material = models.CharField(max_length=200,default='')
+    sleeve_install_date = models.DateTimeField('Install Date',default=datetime.datetime.now)
+    sleeve_condition_at_start = models.IntegerField(default=0)
+    is_from_bulk = models.BooleanField(default=False)
+    is_precompressed = models.BooleanField(default=False)
+    num_of_studs = models.IntegerField(default=0)
+    nominal_flow_in_g_per_min = models.FloatField(default=0)
+    nominal_pressure_in_psi = models.FloatField(default=0)
+    nominal_pressure_suction_in_psi = models.FloatField(default=0)
+    fluid_pumped = models.CharField(max_length=200,default='')
+    nominal_solids_percentage = models.FloatField(default=0)
+    does_media_change = models.BooleanField(default=False)
+    fluid_specific_gravity = models.FloatField(default=0)
+    nominal_fluid_temperature_celcius = models.FloatField(default=0)
+    gearbox_lube_brand = models.CharField(max_length=200,default='')
+    gearbox_lube_iso = models.CharField(max_length=200,default='')
+    gearbox_lube_type = models.CharField(max_length=200,default='')
+    is_gearbox_lube_synthetic = models.BooleanField(default=False)
+    is_installer_trained = models.BooleanField(default=False)
+    installer_training_program = models.CharField(max_length=200,default='')
+    is_installer_witnessed = models.BooleanField(default=False)
+    is_installation_proper = models.BooleanField(default=False)
+    maintenance_crew_ID = models.IntegerField(default=0)
+    past_maintenance_interval_days = models.IntegerField(default=0)
+    target_maintenance_level = models.IntegerField(default=0)
+    hourly_cost_of_downtime = models.FloatField(default=0)
+    cost_of_water_per_1000_m3 = models.FloatField(default=0)
+    cost_of_rebuild = models.FloatField(default=0)
+    cost_of_sleeve = models.FloatField(default=0)
+    cost_of_bearing = models.FloatField(default=0)
+    cost_of_labour = models.FloatField(default=0)
+    cost_of_lubs = models.FloatField(default=0)
+    cost_of_other_rebuild = models.FloatField(default=0)
+    cost_of_bearing_seal = models.FloatField(default=0)
+    is_critical_application = models.BooleanField(default=False)
+    sensor_configuration = models.CharField(max_length=200,default='')
+    node_install_date = models.DateTimeField('Node Install Date',default=datetime.datetime.now)
+    node_deploy_date = models.DateTimeField('Node Deploy Date',default=datetime.datetime.now)
+    bearing_seal_type = models.CharField(max_length=200,default='')
+
+    def __str__(self):
+        return self.pump_name
+
 
 class Node(models.Model):
     nodeowner = models.ForeignKey(Nodeowner,on_delete=models.CASCADE)
-    customer_id = models.IntegerField()
-    node_name = models.CharField(max_length=200)  #just for fun and to make the process of installation more intuitive
-    customer_equipment_id = models.IntegerField()
+    current_equipment_id = models.IntegerField(default=0) #This defines which pump the node it currently attached to
 
-    # Sponsor Defined Static Metadata
-    arduino_node_id = models.IntegerField()
-    raspi_node_id = models.IntegerField()
-    pump_serial_number = models.IntegerField()
-    pump_manufacturer = models.CharField(max_length=200)
-    pump_model = models.CharField(max_length=200)
-    pump_size_x = models.IntegerField()
-    pump_size_y = models.IntegerField()
-    motor_hp = models.FloatField()
-    rpm_rating = models.IntegerField()
-    is_variable_speed = models.BooleanField()
-    motor_voltage_rating = models.FloatField()
-    motor_amperage_rating = models.FloatField()
-    imp_size_inches = models.FloatField()
-    shaft_OR_sleeve_OD = models.FloatField()
-    stuffing_box_OD = models.FloatField()
-    packing_ring_UOM = models.FloatField()
-    lantern_flush_fluid_type = models.CharField(max_length=200)
+    #Node metadata
+    node_id = models.IntegerField(default=0)
+    node_name = models.CharField(max_length=200,default='')  #just for fun and to make the process of installation more intuitive
+    associated_raspi_node_id = models.IntegerField(default=0)
+    node_hardware_version = models.CharField(max_length=200,default='')
+    node_firmware_version = models.CharField(max_length=200,default='')
 
-    # Sponsor Defined Non-Static Metadata (or undefined)
-    packing_X_section_DIM1 = models.FloatField()
-    packing_X_section_DIM2 = models.FloatField()
-    packing_ring_shape = models.CharField(max_length=200)
-    packing_ring_material1 = models.CharField(max_length=200)
-    packing_ring_material2 = models.CharField(max_length=200)
-    packing_ring_material3 = models.CharField(max_length=200)
-    packing_ring_material4 = models.CharField(max_length=200)
-    packing_ring_material5 = models.CharField(max_length=200)
-    packing_ring_material6 = models.CharField(max_length=200)
-    has_lantern_ring = models.BooleanField()
-    lantern_ring_position = models.CharField(max_length=200)
-    lantern_flush_volume_flow = models.FloatField()
-    lantern_ring_fluid_pressure = models.FloatField()
-    has_gasket_separator = models.BooleanField()
-    has_throat_brushing = models.BooleanField()
-    lantern_ring_width_inches = models.FloatField()
-    number_of_packing_rings = models.IntegerField()
-    packing_style_used = models.CharField(max_length=200)
-    pump_location_gps_latitude = models.FloatField()
-    pump_location_gps_longitude = models.FloatField()
-    pump_location_gps_altitude = models.FloatField()
-    sleeve_material = models.CharField(max_length=200)
-    sleeve_install_date = models.DateTimeField('Install Date')
-    sleeve_condition_at_start = models.IntegerField()
-    is_from_bulk = models.BooleanField()
-    is_precompressed = models.BooleanField()
-    num_of_studs = models.IntegerField()
-    bearing_seal_type = models.CharField(max_length=200)
-    nominal_flow_in_g_per_min = models.FloatField()
-    nominal_pressure_in_psi = models.FloatField()
-    nominal_pressure_suction_in_psi = models.FloatField()
-    fluid_pumped = models.CharField(max_length=200)
-    nominal_solids_percentage = models.FloatField()
-    does_media_change = models.BooleanField()
-    fluid_specific_gravity = models.FloatField()
-    nominal_fluid_temperature_celcius = models.FloatField()
-    gearbox_lube_brand = models.CharField(max_length=200)
-    gearbox_lube_iso = models.CharField(max_length=200)
-    gearbox_lube_type = models.CharField(max_length=200)
-    is_gearbox_lube_synthetic = models.BooleanField()
-    is_installer_trained = models.BooleanField()
-    installer_training_program = models.CharField(max_length=200)
-    is_installer_witnessed = models.BooleanField()
-    is_installation_proper = models.BooleanField()
-    maintenance_crew_ID = models.IntegerField()
-    past_maintenance_interval_days = models.IntegerField()
-    target_maintenance_level = models.IntegerField()
-    hourly_cost_of_downtime = models.FloatField()
-    cost_of_water_per_1000_m3 = models.FloatField()
-    cost_of_rebuild = models.FloatField()
-    cost_of_sleeve = models.FloatField()
-    cost_of_bearing = models.FloatField()
-    cost_of_labour = models.FloatField()
-    cost_of_lubs = models.FloatField()
-    cost_of_other_rebuild = models.FloatField()
-    cost_of_bearing_seal = models.FloatField()
-    is_critical_application = models.BooleanField()
-    sensor_configuration = models.CharField(max_length=200)
-    node_install_date = models.DateTimeField('Node Install Date')
-    node_deploy_date = models.DateTimeField('Node Deploy Date')
-    node_hardware_version = models.CharField(max_length=200)
-    node_firmware_version = models.CharField(max_length=200)
 
     def __str__(self):
         return self.node_name
 
 
-class TestDatapoint(models.Model):
+class TestCase(models.Model):
+    pump = models.ForeignKey(Pump,on_delete=models.CASCADE)
+    test_case_id = models.IntegerField(default=0)
+    packing_name = models.CharField(max_length=200,default='')
+    start_time = models.DateTimeField('Test Start Time',default=datetime.datetime.now)
+    packing_inner_diameter_inches = models.FloatField(default=0)
+    packing_outer_diameter_inches = models.FloatField(default=0)
+    packing_thickness_inches = models.FloatField(default=0)
+    surface_finish_rating = models.IntegerField(default=0)
+    fluid_type = models.CharField(max_length=200,default='')
+    initial_node_voltage = models.FloatField(default=0)
+    initial_temperature = models.FloatField(default=0)
+    end_time = models.DateTimeField('Test End Time', default=datetime.datetime.now)
+
+    def __str__(self):
+        return "Test #" + self.test_case_id
+
+
+class ManualDatapoint(models.Model):
+    models.ForeignKey(TestCase,on_delete=models.CASCADE)
+    datapoint_id = models.IntegerField(default=0)
+    timestamp = models.DateTimeField('Timestamp', default=datetime.datetime.now)
+    time_to_failure = models.FloatField(default=-1) #set to -1 if you don't know yet
+    out_pressure = models.FloatField(default=0)
+    in_pressure = models.FloatField(default=0)
+
+    def __str__(self):
+        return "Datapoint at #" + self.datapoint_id
+
+class SampleAutomaticDatapoint(models.Model):
     models.ForeignKey(Node,on_delete=models.CASCADE)
-    data_id = models.IntegerField()
-    data_name = models.CharField(max_length=200)
-    temperature = models.FloatField()
-    rpm = models.IntegerField()
+    node_id = models.IntegerField(default=0)
+    datapoint_id = models.IntegerField(default=0)
+    timestamp = models.DateTimeField
+    load_washer_1_lbs = models.FloatField(default=0)
+    load_washer_2_lbs = models.FloatField(default=0)
+    gland_follower_position_inches = models.FloatField(default=0)
+    force_on_gland_follower_lbs = models.FloatField(default=0)
+    equipment_id = models.IntegerField(default=0) #This defines which pump the node is currently attached to
+    flush_water_flow_rate = models.FloatField(default=0)
+    leakage_rate_cc_per_s = models.FloatField(default=0)
+
+    ambient_temp_C = models.FloatField(default=0)
+    shaft_temp_C = models.FloatField(default=0)
+    casing_temp_C = models.FloatField(default=0)
+    gland_temp_C = models.FloatField(default=0)
+    rpm = models.IntegerField(default=0)
+
+
+    def __str__(self):
+        return "Datapoint at #" + self.datapoint_id
+
+
+
+
+
+
+
+
 
 
 
