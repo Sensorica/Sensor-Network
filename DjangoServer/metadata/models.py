@@ -114,7 +114,7 @@ class Node(models.Model):
         return self.node_name
 
 
-class TestCase(models.Model):
+class PumpConfiguration(models.Model):
     pump = models.ForeignKey(Pump,on_delete=models.CASCADE)
     test_case_id = models.IntegerField(default=0)
     packing_name = models.CharField(max_length=200,default='')
@@ -133,7 +133,7 @@ class TestCase(models.Model):
 
 
 class ManualDatapoint(models.Model):
-    models.ForeignKey(TestCase,on_delete=models.CASCADE)
+    models.ForeignKey(PumpConfiguration,on_delete=models.CASCADE)
     datapoint_id = models.IntegerField(default=0)
     timestamp = models.DateTimeField('Timestamp', default=datetime.datetime.now)
     time_to_failure = models.FloatField(default=-1) #set to -1 if you don't know yet
@@ -165,6 +165,14 @@ class SampleAutomaticDatapoint(models.Model):
 
     def __str__(self):
         return "Datapoint at #" + self.datapoint_id
+
+
+
+class MaintenanceLog(models.Models):
+    models.ForeignKey(PumpConfiguration,on_delete=models.CASCADE)
+    timestamp = models.DateTimeField()
+    activity = models.TextField(default='')
+
 
 
 

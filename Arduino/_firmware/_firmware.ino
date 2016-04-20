@@ -49,7 +49,7 @@ int  idle = 0;
 // This device uses a 2KHz SPI protocol and has no memory scratchpad to read from so data must be read sequentially
 // according to its clock speed It takes approximately 470ms for a reading and the data is five bytes long.
 
-#define  ClockPin  6  // clock in
+#define  ClockPin  6  // clock in 
 #define  DataPin   7  //data in  
 #define  TestPin   8  //driver pin  set pin low to start deliver data
 
@@ -204,11 +204,11 @@ void flowCalc(){
 long int NODE_ID = 1;
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-//                                              10. Vibration +FFT
-int const fft_size = 128;
-int fft_window[fft_size];
-int fft_output[fft_size];
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+////                                              10. Vibration +FFT
+//int const fft_size = 128;
+//int fft_window[fft_size];
+//int fft_output[fft_size];
 
 
 void setup()
@@ -248,11 +248,11 @@ void setup()
     water_level_samples[i]=0;
   }
 
-  //Initialize FFT Window
-  for (int i = 0; i<fft_size; i++){
-    fft_window[i]=0;
-    fft_output[i]=0;
-  }
+//  //Initialize FFT Window
+//  for (int i = 0; i<fft_size; i++){
+//    fft_window[i]=0;
+//    fft_output[i]=0;
+//  }
 	
 	
   //Initialize SEN0093 pins (shaft temperature)
