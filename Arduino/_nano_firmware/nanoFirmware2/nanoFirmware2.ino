@@ -46,8 +46,7 @@ void setup() {
   digitalWrite(digitalSleepPin, HIGH);
   Serial.begin(115200); // use the serial port
   TIMSK0 = 0; // turn off timer0 for lower jitter - delay() and millis() killed
-  ADCSRA = 0xe5; // set the adc to free running mode
-//  ADCSRA = 0x8A;
+  ADCSRA = 0xe7; // set the adc to free running mode // This is the default -> 229 or 0xe5
   ADMUX = 0x40; // use adc0
   DIDR0 = 0x01; // turn off the digital input for adc0
 }
@@ -60,8 +59,8 @@ void loop() {
 //  sensorX = analogRead(sensorX_pin);
     cli();  // UDRE interrupt slows this way down on arduino1.0
     for (int i = 0 ; i < 2*FFT_N; i += 2) { // save 256 samples
-      while(!(ADCSRA & 0x10)); // wait for adc to be ready
-      ADCSRA = 0xf5; // restart adc
+      while(!(ADCSRA & 0x10)); // wait for adc to be ready -> Checking bit 4
+      ADCSRA = 0xf7; // restart adc
       byte m = ADCL; // fetch adc data
       byte j = ADCH;
       int k = (j << 8) | m; // form into an int
@@ -71,7 +70,7 @@ void loop() {
       fft_input[i+1] = 0; // set odd bins to 0
 //      delay(millisecond_delay); //How many milisecconds between samples
 //      delayMicroseconds(2000);
-    delay(millisecond_delay);
+//    delay(millisecond_delay);
     }
     // window data, then reorder, then run, then take output
     fft_window(); // window the data for better frequency response
@@ -89,7 +88,7 @@ void loop() {
     }
     Serial.println("");
 
-delay(4000);
+delay(120000);
 //    delay(500000); 
   }
 //  if (millis() - lastPrintTime >= delayInMillis) {
