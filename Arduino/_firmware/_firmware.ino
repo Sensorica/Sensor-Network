@@ -204,13 +204,6 @@ void flowCalc(){
 long int NODE_ID = 1;
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-////                                              10. Vibration +FFT
-//int const fft_size = 128;
-//int fft_window[fft_size];
-//int fft_output[fft_size];
-
-
 void setup()
 {
   
@@ -248,12 +241,6 @@ void setup()
     water_level_samples[i]=0;
   }
 
-//  //Initialize FFT Window
-//  for (int i = 0; i<fft_size; i++){
-//    fft_window[i]=0;
-//    fft_output[i]=0;
-//  }
-	
 	
   //Initialize SEN0093 pins (shaft temperature)
   pinMode(DataPin,INPUT);
