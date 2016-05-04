@@ -2,7 +2,11 @@
 Code developed by Sensorica
 Modified from openmusiclabs.com 8.18.12 example sketch 
 
-The code takes in 
+We sample microphone and vibration sensor data and alternates between the two
+We pass the data through an FFT
+We searche for peaks in the FFT
+We calculate the 3dB peak-power at the peaks
+We output the data to the serial port
 */
 
 // do #defines BEFORE #includes
@@ -52,13 +56,13 @@ const unsigned char PS_32_c = 0xf5; // Chosen Prescaler -> 32
 
 //peak finding variables
 const int number_of_peaks = 5;
-const int noise_floor = 50;
+const int noise_floor = 100;
 int biggest_peaks[number_of_peaks];
-int dB3[FFT_N/2];
+int peak_power[FFT_N/2];
 
 //State Data
 boolean is_microphone = true;
-int down_sampling_rate = 5;
+int down_sampling_rate = 1;
 
 void setup() {
     // declare the ledPin as an OUTPUT:
@@ -118,17 +122,17 @@ void loop() {
     //SEND DATA TO ARDUINO-ARDUINO INTERFACE
     //NEED INPUT FROM JIM HERE
 
-      is_microphone = true; //set to microphone mode
-      down_sampling_rate =20;// microphone mode 
-
-//    //TIME DUPLEX BETWEEN MICROPHONE AND VIBRATION SENSOR
-//    if (is_microphone == true){
-//      is_microphone = false; //set to vibration mode
-//      down_sampling_rate =20;//vibration mode uses downsampling factor 20
-//    }else{
 //      is_microphone = true; //set to microphone mode
-//      down_sampling_rate =5;// microphone mode 
-//    }
+//      down_sampling_rate =1;// microphone mode 
+
+    //TIME DUPLEX BETWEEN MICROPHONE AND VIBRATION SENSOR
+    if (is_microphone == true){
+      is_microphone = false; //set to vibration mode
+      down_sampling_rate =20;//vibration mode uses downsampling factor 20
+    }else{
+      is_microphone = true; //set to microphone mode
+      down_sampling_rate =1;// microphone mode 
+    }
 
 
 
@@ -155,7 +159,7 @@ void print_fft(){
 void print_peaks(){ 
     Serial.println("3dB Bandwidth:");
     for(int i = 0 ; i < FFT_N/2; i++){
-      Serial.print(dB3[i]);
+      Serial.print(peak_power[i]);
       Serial.print(",");
     }
     Serial.println("");
@@ -165,16 +169,20 @@ void print_max_peaks(){
  int scaling_factor = 1; //pos * BW_per_pos
   if(is_microphone==true){
     Serial.println("Microphone Peaks At:");
-    scaling_factor = 247;
+    scaling_factor = 133;
   }else{
     Serial.println("Vibration Sensor Peaks At:");
     scaling_factor = 7;
   }
  
     for(int i = 0 ; i < number_of_peaks; i++){
-      Serial.print(biggest_peaks[i]*scaling_factor);
+      if(biggest_peaks[i]!=0){
+      Serial.print((biggest_peaks[i]+1)*scaling_factor); //Print out the frequency
+      }else{
+          Serial.print(0);
+      }
       Serial.print(",");
-      Serial.print(dB3[biggest_peaks[i]]);
+      Serial.print(peak_power[biggest_peaks[i]]); //Print out the power at that peak
       Serial.print(",");
     }
     Serial.println("");
@@ -184,7 +192,7 @@ void find_peaks(){
 
   //Initialize peak arrays
     for (int i = 0; i<FFT_N/2;i++){
-    dB3[i] = 0;
+    peak_power[i] = 0;
   }
   
   for (int i = 1; i < FFT_N/2-1; i++){
@@ -193,15 +201,19 @@ void find_peaks(){
     if (fft_log_out[i] > noise_floor &&
         fft_log_out[i] >= fft_log_out[i-1] &&
         fft_log_out[i] >= fft_log_out[i+1]){
-          int j=i;          
+          int j=i;
+
+          //Determine the BW of the peak
           while(fft_log_out[j] > fft_log_out[i]/2){
             if(j>=FFT_N/2-1){
               break;
             }
             j++;
           }
-//         dB3[i] = 2*(j-i-1)+1; //Algorithm to find the 3dB point
-        dB3[i] = fft_log_out[i]*(2*(j-i-1)+1); //This actually find the power
+
+          
+//         dB3[i] = 2*(j-i-1)+1; //Algorithm to find the right hand 3dB point
+        peak_power[i] = fft_log_out[i]*(2*(j-i-1)+1); //Calculate the power of this peak
     }
   }
   
@@ -213,14 +225,14 @@ for (int j = 0; j<number_of_peaks;j++){
   //extract the biggest peaks
   int smallest_max_peak = 0;
   for (int i = 0; i<FFT_N/2;i++){
-    if (dB3[i] > smallest_max_peak){ 
+    if (peak_power[i] > smallest_max_peak){ 
 
       //Determine the index of the current smallest peak
       int smallest_peak_index=0;
       int smallest_peak=20000;
       for (int j = 0; j<number_of_peaks;j++){
-           if(dB3[biggest_peaks[j]]<smallest_peak){
-            smallest_peak = dB3[biggest_peaks[j]];
+           if(peak_power[biggest_peaks[j]]<smallest_peak){
+            smallest_peak = peak_power[biggest_peaks[j]];
             smallest_peak_index = j;
            }
       }
@@ -232,12 +244,12 @@ for (int j = 0; j<number_of_peaks;j++){
       smallest_peak=20000;
       smallest_peak_index=0;
       for (int j = 0; j<number_of_peaks;j++){
-           if(dB3[biggest_peaks[j]]<smallest_peak){
-            smallest_peak = dB3[biggest_peaks[j]];
+           if(peak_power[biggest_peaks[j]]<smallest_peak){
+            smallest_peak = peak_power[biggest_peaks[j]];
             smallest_peak_index = j;
            }
       }
-      smallest_max_peak = dB3[biggest_peaks[smallest_peak_index]];  
+      smallest_max_peak = peak_power[biggest_peaks[smallest_peak_index]];  
     }
   }
 }
