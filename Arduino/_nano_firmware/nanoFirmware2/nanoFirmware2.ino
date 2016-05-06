@@ -56,7 +56,7 @@ const unsigned char PS_32_c = 0xf5; // Chosen Prescaler -> 32
 
 //peak finding variables
 const int number_of_peaks = 5;
-const int noise_floor = 100;
+int noise_floor = 100;
 int biggest_peaks[number_of_peaks];
 int peak_power[FFT_N/2];
 
@@ -119,29 +119,26 @@ void loop() {
     print_peaks();
     print_max_peaks();
     
-    //SEND DATA TO ARDUINO-ARDUINO INTERFACE
-    //NEED INPUT FROM JIM HERE
+    //TODO: SEND DATA TO ARDUINO-ARDUINO INTERFACE
 
-//      is_microphone = true; //set to microphone mode
-//      down_sampling_rate =1;// microphone mode 
-
-    //TIME DUPLEX BETWEEN MICROPHONE AND VIBRATION SENSOR
+ 
+    //ALTERNATE BETWEEN MICROPHONE AND VIBRATION SENSOR
     if (is_microphone == true){
+      //SWITCH BACK TO VIBRATION SENSOR
       is_microphone = false; //set to vibration mode
       down_sampling_rate =20;//vibration mode uses downsampling factor 20
+      ADMUX = 0x41; // change it to adc1
+      noise_floor = 50;
     }else{
+      //SWITCH BACK TO MICROPHONE
       is_microphone = true; //set to microphone mode
       down_sampling_rate =1;// microphone mode 
+      ADMUX = 0x40; // use adc0
+      noise_floor = 100;
     }
-
-
-
-//delay(2000);
 
 //When TIMSK0 is on: 
 delay(120000);
-
-//    delay(500000); 
   }
 }
 
