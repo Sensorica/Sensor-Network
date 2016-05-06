@@ -113,8 +113,8 @@ int loadWasher2Pin = A5;
 //A is our linear rate in Arduino ADC levels / lbs
 //B is our reference level as applied by the amplifyer circuit
 double A_linear_rate = 0.023;
-double B_reference_level1 = 435; // Reference level for load1
-double B_reference_level2 = 435; // Reference level for load2
+double B_reference_level1 = 508; // Reference level for load1
+double B_reference_level2 = 504; // Reference level for load2
 
 //Initialize variables
 const int load_sample_window = 70;
@@ -130,7 +130,7 @@ double load2_in_lbs = 0;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 //                                                5. LEVEL SENSOR
 
-int levelSensorPin = A2;
+int levelSensorPin = A3;
 
 //Insert Calibration Data Here: Level = AX + B format (rounded to the nearest integer N)
 //X is the water depth in cm
@@ -281,14 +281,20 @@ void loop()
  //Take the samples each loop - Averaging done in the interrupt
  load1_samples[index_load] = analogRead(loadWasher1Pin);
  load2_samples[index_load] = analogRead(loadWasher2Pin);
+// Serial.print (load1_samples[index_load]);
+// Serial.print (" ");
+// Serial.println (load2_samples[index_load]);
+// 
  index_load = (index_load + 1)%load_sample_window;
-
+ 
  
   //////////////////////////////////////////////////////Water Level Sensor
  
 
  analog_water_level = analogRead(levelSensorPin);
-
+// Serial.print ("Water level: ");
+// Serial.println (analog_water_level);
+// delay (250);
 // Stores samples
  water_level_samples[index_water] = ( analog_water_level - B_water_reference_level ) / A_water_rate;
 
@@ -304,7 +310,7 @@ void loop()
 
 ////Set the reference water level for a calculation (when appropriate)
 if(initialize==true){
-  Serial.println("Re-initializing water states");
+  //Serial.println("Re-initializing water states");
   flow_calc_water_level_cm = water_level_cm;
   calc_time_ms = millis();
   initialize=false;
@@ -323,11 +329,11 @@ if(initialize==true){
 //Calculate the flow rate
  if (solenoid_valve_open == false){ 
   if (water_level_cm >= (flow_calc_water_level_cm + water_level_buffer)){
-    Serial.println("CALCULATION TRIGGERED!");
+    //Serial.println("CALCULATION TRIGGERED!");
    double water_level_delta = water_level_cm - flow_calc_water_level_cm;
    double time_delta = millis() - calc_time_ms;
-   Serial.println(water_level_delta);
-   Serial.println(time_delta/1000);
+   //Serial.println(water_level_delta);
+  // Serial.println(time_delta/1000);
    flow_rate_cc_per_sec = ( water_level_delta ) / (time_delta/1000);
 
    //set the last calculation references
@@ -427,18 +433,18 @@ if (flowTrigger){
     shaftTemp = (float)tempData/16-273.15;
 	
 	
-	//////////////////////////////////////////////////////Printing 	  
-	  data = "";
+    //////////////////////////////////////////////////////Printing 	  
+    data = "";
     data += NODE_ID;
     data += ",";
     data += shaftTemp;
     data += ",";
-	  data += ambient_temperature;
+    data += ambient_temperature;
     data += ",";
     data += casing_temperature;
     data += ",";
-	  data += gland_temperature;
-	  data += ",";
+    data += gland_temperature;
+    data += ",";
     data += rpm;
     data += ",";
     data += load1_in_lbs;
@@ -453,8 +459,8 @@ if (flowTrigger){
     Serial.println (data);
 
     //////////////////////////////////////////////////////Go back to Zero Delay Loop
-	  attachInterrupt (0, revolution, RISING);  // re-attach interrupt handler for tachometer
-   attachInterrupt (1, flowCalc, RISING);  // re-attach interrupt handler for tachometer
+    attachInterrupt (0, revolution, RISING);  // re-attach interrupt handler for tachometer
+    attachInterrupt (1, flowCalc, RISING);  // re-attach interrupt handler for flush flow rate sensor
     last_print_time = millis();
     revolution_occured = false;
     //pulses = 0;
