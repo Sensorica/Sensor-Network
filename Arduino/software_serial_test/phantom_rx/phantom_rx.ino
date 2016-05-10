@@ -4,6 +4,7 @@
 SoftwareSerial mySerial(10, 11); // RX, TX
 
 void setup() {
+  analogReference(EXTERNAL);
   
   Serial.begin(57600);
   while (!Serial) {
@@ -11,7 +12,7 @@ void setup() {
   }
 
 
-  Serial.println("Who are you?!!");
+  Serial.println("Receiving!");
   delay(1000);
   mySerial.begin(4800);
   

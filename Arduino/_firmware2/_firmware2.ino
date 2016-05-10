@@ -18,12 +18,15 @@
 // 7. The Serial Monitor
 // 8. Flow Sensor. 
 //      The data from each sensor is printed on the serial monitor. The data on the serial monitor will be picked up
-//      by the Zigbee module and automatically transmitted to the base node. (Remember to toggle switch on shield to SERIAL) 
+//      by the Zigbee module and automatically transmitted to the base node. (Remember to toggle switch on shield to SERIAL)
+// 9. Software Serial to FFT
+//10. Node Metadata
 
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            1. TEMPERATURE SENSORS
+#include <SoftwareSerial.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
 
@@ -197,9 +200,20 @@ void flowCalc(){
   flowTrigger = true;
 }
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                               9. SOFTWARE SERIAL TO FFT
+
+
+SoftwareSerial mySerial(10, 11); // RX, TX
+
+
+String mic_FFT = "" ;
+String vibration_FFT = "";
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
-//                                              9. NODE METADATA
+//                                              10. NODE METADATA
 
 long int NODE_ID = 1;
 
@@ -258,7 +272,14 @@ void setup()
 //   useInterrupt(true);
 
    delay(100);
+   
+   // Software Serial to FFT micro
+ 
+ mySerial.begin(4800);
+
 } 
+
+ 
 
 
 void loop()
@@ -431,6 +452,34 @@ if (flowTrigger){
     data_read(data_buf);
     tempData = data_buf[1]*256 + data_buf[2];
     shaftTemp = (float)tempData/16-273.15;
+    
+    
+    //////////////////////////////////////////////////////Communicate to FFT
+    
+    mic_FFT = "";
+    vibration_FFT = "";
+    char inByteA;
+    char inByteB;
+    mySerial.print("Go!");
+     while (! mySerial.available()) {
+       }
+    
+    while (mySerial.available()) {
+         inByteA = mySerial.read();
+         mic_FFT += inByteA;
+         Serial.println (mic_FFT);
+        }
+       
+      
+    mySerial.print ("Go!");
+    while (! mySerial.available()) {
+       }
+    while (mySerial.available()) {
+        inByteB = mySerial.read();
+        vibration_FFT += inByteB;
+        Serial.println(vibration_FFT);
+       }
+    
 	
 	
     //////////////////////////////////////////////////////Printing 	  
@@ -454,7 +503,10 @@ if (flowTrigger){
     data += flow_rate_cc_per_sec;
     data += ",";
     data += flowrate;
-        
+    data += ",";
+    data += mic_FFT;
+    data += ",";
+    data += vibration_FFT;    
     
     Serial.println (data);
 
