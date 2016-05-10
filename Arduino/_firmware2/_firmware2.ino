@@ -204,7 +204,7 @@ void flowCalc(){
 //                                               9. SOFTWARE SERIAL TO FFT
 
 
-SoftwareSerial mySerial(10, 11); // RX, TX
+SoftwareSerial mySerial(9, 11); // RX, TX
 
 
 String mic_FFT = "" ;
@@ -221,7 +221,7 @@ long int NODE_ID = 1;
 void setup()
 {
   
-  Serial.begin(9600);        //Enable serial at high speed 
+  Serial.begin(4800);        //Enable serial at high speed 
   analogReference(EXTERNAL); //Important or we send 5V into the 3V3 pin!
   
   // Tachometer setup
@@ -274,7 +274,6 @@ void setup()
    delay(100);
    
    // Software Serial to FFT micro
- 
  mySerial.begin(4800);
 
 } 
@@ -283,7 +282,13 @@ void setup()
 
 
 void loop()
-{
+{    
+    
+  while(1){
+  if (mySerial.available()) {
+    Serial.write(mySerial.read());
+        }
+       }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////// ZERO DELAY LOOP ////////////////////////////////////////////////////
@@ -455,30 +460,37 @@ if (flowTrigger){
     
     
     //////////////////////////////////////////////////////Communicate to FFT
+
+//TODO:
+//1. Write the trigger code
+//2. Wait for the read
+//3. Read
+//4. Add to the Xbee
+
     
-    mic_FFT = "";
-    vibration_FFT = "";
-    char inByteA;
-    char inByteB;
-    mySerial.print("Go!");
-     while (! mySerial.available()) {
-       }
-    
-    while (mySerial.available()) {
-         inByteA = mySerial.read();
-         mic_FFT += inByteA;
-         Serial.println (mic_FFT);
-        }
-       
-      
-    mySerial.print ("Go!");
-    while (! mySerial.available()) {
-       }
-    while (mySerial.available()) {
-        inByteB = mySerial.read();
-        vibration_FFT += inByteB;
-        Serial.println(vibration_FFT);
-       }
+//    mic_FFT = "";
+//    vibration_FFT = "";
+//    char inByteA;
+//    char inByteB;
+//    mySerial.print("Go!");
+//     while (! mySerial.available()) {
+//       }
+//    
+//    while (mySerial.available()) {
+//         inByteA = mySerial.read();
+//         mic_FFT += inByteA;
+//         Serial.println (mic_FFT);
+//        }
+//       
+//      
+//    mySerial.print ("Go!");
+//    while (! mySerial.available()) {
+//       }
+//    while (mySerial.available()) {
+//        inByteB = mySerial.read();
+//        vibration_FFT += inByteB;
+//        Serial.println(vibration_FFT);
+//       }
     
 	
 	

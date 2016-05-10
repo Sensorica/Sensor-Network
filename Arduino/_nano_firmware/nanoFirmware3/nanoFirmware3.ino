@@ -25,60 +25,47 @@ SoftwareSerial mySerial(10, 11); // RX, TX
 int  delayInMillis = 2000;
 unsigned long lastPrintTime = 0;
 
-//DEFINE PINS
-int sensorZ_pin = A0;
-int sensorY_pin = A1;
-int sensorX_pin = A2;
-int sample = 0;
+//DEFINE ACCELEROMETER PINS
+//int sensorZ_pin = A0;
+//int sensorY_pin = A1;
+//int sensorX_pin = A2;
+//int sensorZ = 0;
+//int sensorY = 0;
+//int sensorX = 0;
 
-int sensorZ = 0;
-int sensorY = 0;
-int sensorX = 0;
 int digitalSelectPin = 2;
 int digitalSleepPin = 3;
 String data;
 
-int down_sampling_counter = 0;
-
-// Define various ADC prescalers
-//Initialization flags
-//const unsigned char PS_2_i = 0xe1;
-//const unsigned char PS_4_i = 0xe2;
-//const unsigned char PS_8_i = 0xe3;
-//const unsigned char PS_16_i = 0xe4;
+// Define various ADC prescaler variables
 const unsigned char PS_32_i = 0xe5; //Chosen Prescaler -> 32
-//const unsigned char PS_64_i = 0xe6;
-//const unsigned char PS_128_i = 0xe7;
-
-//Code flags -> should use the same prescaler as the initialization
-//const unsigned char PS_2_c = 0xf1;
-//const unsigned char PS_4_c = 0xf2;
-//const unsigned char PS_8_c = 0xf3;
-//const unsigned char PS_16_c = 0xf4;
 const unsigned char PS_32_c = 0xf5; // Chosen Prescaler -> 32
-//const unsigned char PS_64_c = 0xf6;
-//const unsigned char PS_128_c = 0xf7;
 
 //peak finding variables
 const int number_of_peaks = 5;
 int noise_floor = 100;
 int biggest_peaks[number_of_peaks];
+int biggest_mic_peaks[number_of_peaks];
+int biggest_vib_peaks[number_of_peaks];
 int peak_power[FFT_N/2];
 
 //State Data
 boolean is_microphone = true;
+int down_sampling_counter = 0;
 int down_sampling_rate = 1;
 
 void setup() {
   mySerial.begin(4800);
-    // declare the ledPin as an OUTPUT:
-  pinMode(sensorZ, INPUT);
-  pinMode(sensorY, INPUT);
-  pinMode(sensorX, INPUT);
+  
+ //Pins aren't really needed since we are referencing the ADC MUX directly
+//  pinMode(sensorZ, INPUT);
+//  pinMode(sensorY, INPUT);
+//  pinMode(sensorX, INPUT);
+  
   pinMode(digitalSelectPin, OUTPUT);
   digitalWrite(digitalSelectPin, HIGH); //Set to HIGH for 6G sensitivity, OR LOW for 1.5G sensitivity
   digitalWrite(digitalSleepPin, HIGH);
-  Serial.begin(115200); // use the serial port
+  Serial.begin(4800); // use the serial port
   TIMSK0 = 0; //Reduces jitter
   ADCSRA = PS_32_i; //Set Prescaler Value
   ADMUX = 0x40; // use adc0
@@ -88,13 +75,18 @@ void setup() {
 void loop() {
 
 
-  
+// TODO:
+// 1. Write trigger code -> send data over mySerial when I get the signal
+// 2. Then run the mic and vibration again, store the data, and wait for the signal
+// 3. Refresh if I haven't seen anything in 10 second
+
+//while(1){
+//    mySerial.println("hello world");
+//    Serial.println ("hello world");
+//}
   
   while(1) { // reduces jitter
   
-  if (mySerial.available()) {
-    Serial.write(mySerial.read());
-  }
       // read the value from the sensor:
 //  sensorZ = analogRead(sensorZ_pin);
 //  sensorY = analogRead(sensorY_pin);
@@ -129,8 +121,8 @@ void loop() {
     sei(); // turn interrupts back on
     
     find_peaks();
-    print_fft(); 
-    print_peaks();
+    //print_fft(); 
+    //print_peaks();
     print_max_peaks();
     soft_serial_max_peaks();
     
@@ -153,7 +145,7 @@ void loop() {
     }
 
 //When TIMSK0 is on: 
-delay(120000);
+//delay(120000);
   }
 }
 
@@ -188,7 +180,7 @@ void print_max_peaks(){
   }
  
     for(int i = 0 ; i < number_of_peaks; i++){
-      if(biggest_peaks[i]!=0){
+      if(q[i]!=0){
       Serial.print((biggest_peaks[i]+1)*scaling_factor); //Print out the frequency
       }else{
           Serial.print(0);
@@ -203,10 +195,10 @@ void print_max_peaks(){
 void soft_serial_max_peaks(){
  int scaling_factor = 1; //pos * BW_per_pos
   if(is_microphone==true){
-    Serial.println("Microphone Peaks At:");
+    Serial.println("Microphone Software Serial Test:");
     scaling_factor = 133;
   }else{
-    Serial.println("Vibration Sensor Peaks At:");
+    Serial.println("Vibration Software Serial Test:");
     scaling_factor = 7;
   }
     String data_string = ""; 
@@ -221,8 +213,9 @@ void soft_serial_max_peaks(){
       data_string += (",");
     }
     mySerial.println(data_string);
-    mySerial.println("hello");
+    mySerial.println("hello world");
     Serial.println (data_string);
+    Serial.println ("hello world");
 }
 
 void find_peaks(){
@@ -248,7 +241,6 @@ void find_peaks(){
             j++;
           }
 
-          
 //         dB3[i] = 2*(j-i-1)+1; //Algorithm to find the right hand 3dB point
         peak_power[i] = fft_log_out[i]*(2*(j-i-1)+1); //Calculate the power of this peak
     }
