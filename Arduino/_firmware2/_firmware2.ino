@@ -207,15 +207,22 @@ void flowCalc(){
 SoftwareSerial mySerial(9, 11); // RX, TX
 
 
-String mic_FFT = "" ;
-String vibration_FFT = "";
-
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 //                                              10. NODE METADATA
 
 long int NODE_ID = 1;
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                            11. POSITION SENSOR
+
+int positionSignal1 = A2;
+int positionSignal2= A1;
+double position1 = 0;
+double position2 = 0;
+double position1_mm = 0;
+double position2_mm = 0;
+
 
 
 void setup()
@@ -284,12 +291,6 @@ void setup()
 void loop()
 {    
     
-  while(1){
-  if (mySerial.available()) {
-    Serial.write(mySerial.read());
-        }
-       }
-
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //////////////////////////////////////////////////////// ZERO DELAY LOOP ////////////////////////////////////////////////////
   // NOTE: DO NOT ADD FUNCTIONS THAT ADD DELAYS OR BLOCK INTERRUPTS HERE
@@ -314,7 +315,7 @@ void loop()
  index_load = (index_load + 1)%load_sample_window;
  
  
-  //////////////////////////////////////////////////////Water Level Sensor
+  //////////////////////////////////////////////////////Water Level Sensor //////////////////////////////////////
  
 
  analog_water_level = analogRead(levelSensorPin);
@@ -342,7 +343,7 @@ if(initialize==true){
   initialize=false;
 }
 
- //////////////////////////////////////////////////////Solenoid Drain Valve
+ //////////////////////////////////////////////////////Solenoid Drain Valve ////////////////////////////////////
 
  //Start the drain if the water level is too high
  if(water_level_cm >= drain_at_cm_level){
@@ -374,7 +375,7 @@ if(initialize==true){
   initialize=true;
  }
 
- //////////////////////////////////////////////////////Flow Rate Sensor
+ //////////////////////////////////////////////////////Flow Rate Sensor //////////////////////////////////////
 
 
 //   Serial.print("Freq: "); Serial.println(flowrate);
@@ -396,10 +397,17 @@ if (flowTrigger){
   liters /= 7.5;
   liters /= 60.0;
 
-//  Serial.print(liters); Serial.println(" Liters");
- 
 
 
+///////////////////////////////////////////////////Position Sensor ////////////////////////////////////////////
+
+
+ position1 = analogRead(positionSignal1);
+ position2 = analogRead(positionSignal2);
+
+ //TODO calculation to get position in cm
+  position1_mm = position1 * 12.7 / 1023 ;//12.7mm is the max range of the displacement sensor
+  position2_mm = position2 * 12.7 / 1023; // 1023 is the highest adc number
 
 //END OF ZERO DELAY LOOP
   
@@ -418,7 +426,8 @@ if (flowTrigger){
      revolution_count = 0;
 
 //  flow rate code
-    flowrate = (pulses - last_pulses) / (duration/1000) ;
+    flowrate = (pulses - last_pulses) / (duration/1000) ; //Hz
+    flowrate = (flowrate + 3)/8.1; // L/min
     last_pulses = pulses;
     
 
@@ -459,41 +468,6 @@ if (flowTrigger){
     shaftTemp = (float)tempData/16-273.15;
     
     
-    //////////////////////////////////////////////////////Communicate to FFT
-
-//TODO:
-//1. Write the trigger code
-//2. Wait for the read
-//3. Read
-//4. Add to the Xbee
-
-    
-//    mic_FFT = "";
-//    vibration_FFT = "";
-//    char inByteA;
-//    char inByteB;
-//    mySerial.print("Go!");
-//     while (! mySerial.available()) {
-//       }
-//    
-//    while (mySerial.available()) {
-//         inByteA = mySerial.read();
-//         mic_FFT += inByteA;
-//         Serial.println (mic_FFT);
-//        }
-//       
-//      
-//    mySerial.print ("Go!");
-//    while (! mySerial.available()) {
-//       }
-//    while (mySerial.available()) {
-//        inByteB = mySerial.read();
-//        vibration_FFT += inByteB;
-//        Serial.println(vibration_FFT);
-//       }
-    
-	
-	
     //////////////////////////////////////////////////////Printing 	  
     data = "";
     data += NODE_ID;
@@ -512,16 +486,33 @@ if (flowTrigger){
     data += ",";
     data += load2_in_lbs;
     data += ",";
-    data += flow_rate_cc_per_sec;
+    data += flow_rate_cc_per_sec; //This is for the level sensor rate
     data += ",";
-    data += flowrate;
+    data += flowrate; // This is for the flow sensor
     data += ",";
-    data += mic_FFT;
+    data += position1_mm;
     data += ",";
-    data += vibration_FFT;    
-    
-    Serial.println (data);
+    data += position2_mm;
 
+    //Signal the FFT to take measurements
+    mySerial.write("!");
+
+    //Wait for the response from the FFT
+    while(!mySerial.available()){
+    }
+
+  Serial.print(data);
+
+  //This loop prints the data from the FFT. The waits 
+for (int i = 0; i < 21; i++){
+    while(mySerial.available()){
+      Serial.write(mySerial.read());
+    }
+    delay(5); //This delay help wait until the mySerial is available (not sure what the optimal value is here)
+}
+   
+    Serial.println("");
+    
     //////////////////////////////////////////////////////Go back to Zero Delay Loop
     attachInterrupt (0, revolution, RISING);  // re-attach interrupt handler for tachometer
     attachInterrupt (1, flowCalc, RISING);  // re-attach interrupt handler for flush flow rate sensor

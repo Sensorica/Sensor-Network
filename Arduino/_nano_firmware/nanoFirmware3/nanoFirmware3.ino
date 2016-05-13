@@ -16,16 +16,13 @@ SoftwareSerial mySerial(10, 11); // RX, TX
 
 // do #defines BEFORE #includes
 #define LOG_OUT 1 // use the log output function
-#define FFT_N 256 // set to 256 point fft
+#define FFT_N 128 // set to 128 point fft --> TODO: If you remove peak_power[] you will have enough memory to use a 256 point
 #define WINDOW 1 // Enable windowing
 
 #include <FFT.h> // include the library
 //#include <prescaler.h>
 
-int  delayInMillis = 2000;
-unsigned long lastPrintTime = 0;
-
-//DEFINE ACCELEROMETER PINS
+//DEFINE ACCELEROMETER PINS IN CASE WE NEED THIS LATER
 //int sensorZ_pin = A0;
 //int sensorY_pin = A1;
 //int sensorX_pin = A2;
@@ -45,8 +42,6 @@ const unsigned char PS_32_c = 0xf5; // Chosen Prescaler -> 32
 const int number_of_peaks = 5;
 int noise_floor = 100;
 int biggest_peaks[number_of_peaks];
-int biggest_mic_peaks[number_of_peaks];
-int biggest_vib_peaks[number_of_peaks];
 int peak_power[FFT_N/2];
 
 //State Data
@@ -54,6 +49,10 @@ boolean is_microphone = true;
 int down_sampling_counter = 0;
 int down_sampling_rate = 1;
 
+//Print Variables
+String data_string = "";
+
+///////////////////////////////////////////////////SETUP////////////////////////////////////////////////////////
 void setup() {
   mySerial.begin(4800);
   
@@ -63,7 +62,7 @@ void setup() {
 //  pinMode(sensorX, INPUT);
   
   pinMode(digitalSelectPin, OUTPUT);
-  digitalWrite(digitalSelectPin, HIGH); //Set to HIGH for 6G sensitivity, OR LOW for 1.5G sensitivity
+  digitalWrite(digitalSelectPin, LOW); //Set to HIGH for 6G sensitivity, OR LOW for 1.5G sensitivity
   digitalWrite(digitalSleepPin, HIGH);
   Serial.begin(4800); // use the serial port
   TIMSK0 = 0; //Reduces jitter
@@ -72,27 +71,28 @@ void setup() {
   DIDR0 = 0x01; // turn off the digital input for adc0
 }
 
+//////////////////////////////////////////////////LOOP//////////////////////////////////////////////////////////
+
 void loop() {
 
-
 // TODO:
-// 1. Write trigger code -> send data over mySerial when I get the signal
 // 2. Then run the mic and vibration again, store the data, and wait for the signal
 // 3. Refresh if I haven't seen anything in 10 second
-
-//while(1){
-//    mySerial.println("hello world");
-//    Serial.println ("hello world");
-//}
   
   while(1) { // reduces jitter
+
+  //DEBUG
+  if(is_microphone==true){
+    Serial.print("Microphone running");
+  }else{
+    Serial.print("Vibration running");
+  }
   
-      // read the value from the sensor:
-//  sensorZ = analogRead(sensorZ_pin);
-//  sensorY = analogRead(sensorY_pin);
-//  sensorX = analogRead(sensorX_pin);
+    
     cli();  // UDRE interrupt slows this way down on arduino1.0
-    for (int i = 0 ; i < 2 * FFT_N; i += 2) { // save 256 samples
+
+    //Collect FFT_N samples
+    for (int i = 0 ; i < 2 * FFT_N; i += 2) {
       while(!(ADCSRA & 0x10)); // wait for adc to be ready -> Checking bit 4
       
       ADCSRA = PS_32_c; // restart adc prescaler value
@@ -123,12 +123,9 @@ void loop() {
     find_peaks();
     //print_fft(); 
     //print_peaks();
-    print_max_peaks();
+    //print_max_peaks();
     soft_serial_max_peaks();
-    
-    //TODO: SEND DATA TO ARDUINO-ARDUINO INTERFACE
 
- 
     //ALTERNATE BETWEEN MICROPHONE AND VIBRATION SENSOR
     if (is_microphone == true){
       //SWITCH BACK TO VIBRATION SENSOR
@@ -148,6 +145,9 @@ void loop() {
 //delay(120000);
   }
 }
+
+
+//////////////////////////////////////////////////////FUNCTIONS/////////////////////////////////////////////////
 
 void print_fft(){
   
@@ -180,7 +180,7 @@ void print_max_peaks(){
   }
  
     for(int i = 0 ; i < number_of_peaks; i++){
-      if(q[i]!=0){
+      if(biggest_peaks[i]!=0){
       Serial.print((biggest_peaks[i]+1)*scaling_factor); //Print out the frequency
       }else{
           Serial.print(0);
@@ -190,32 +190,6 @@ void print_max_peaks(){
       Serial.print(",");
     }
     Serial.println("");
-}
-
-void soft_serial_max_peaks(){
- int scaling_factor = 1; //pos * BW_per_pos
-  if(is_microphone==true){
-    Serial.println("Microphone Software Serial Test:");
-    scaling_factor = 133;
-  }else{
-    Serial.println("Vibration Software Serial Test:");
-    scaling_factor = 7;
-  }
-    String data_string = ""; 
-    for(int i = 0 ; i < number_of_peaks; i++){
-      if(biggest_peaks[i]!=0){
-      data_string += ((biggest_peaks[i]+1)*scaling_factor); //Print out the frequency
-      }else{
-          data_string += "0";
-      }
-      data_string += (",");
-      data_string += (peak_power[biggest_peaks[i]]); //Print out the power at that peak
-      data_string += (",");
-    }
-    mySerial.println(data_string);
-    mySerial.println("hello world");
-    Serial.println (data_string);
-    Serial.println ("hello world");
 }
 
 void find_peaks(){
@@ -281,6 +255,61 @@ for (int j = 0; j<number_of_peaks;j++){
       smallest_max_peak = peak_power[biggest_peaks[smallest_peak_index]];  
     }
   }
+}
+
+
+void soft_serial_max_peaks(){
+
+ //Set the scaling factor based on the state
+ int scaling_factor = 1; //pos * BW_per_pos
+  if(is_microphone==true){
+    Serial.println("Microphone Software Serial Test:");
+    scaling_factor = 133;
+  }else{
+    Serial.println("Vibration Software Serial Test:");
+    scaling_factor = 7;
+  }
+
+  //Build the printout string
+   for(int i = 0; i < number_of_peaks; i++){
+
+    //What we want:
+    // 1. Print out the peaks,
+    // 2. Print out the power levels
+      
+      //Print out the frequency
+      if(biggest_peaks[i]!=0){ //In the case of zero don't print the scaling factor
+        data_string += ","; 
+        data_string += ((biggest_peaks[i]+1)*scaling_factor);
+      }else{ 
+        //In the case of zero don't print the scaling factor
+         data_string += ",";
+         data_string += "0";
+      }
+      
+      //Print the power at that peak  
+      data_string += ",";
+      data_string += (peak_power[biggest_peaks[i]]);
+    }
+
+Serial.println(data_string);
+    //Print out after the second iteration
+    if(is_microphone==false){
+      //Here we have our data ready... wait for the signal to send it
+        while(!mySerial.available()){
+    }
+    //Print out the ! to confirm that we received it
+    while(mySerial.available()){
+    Serial.write(mySerial.read());
+    }
+      mySerial.print(data_string);
+      Serial.println (data_string); //If this doesn't print, then you may be having memory issues
+      Serial.println ("Data was sent!");
+      delay(200); //Give it some clearance to make sure everything printed (not sure if this is needed)
+      data_string = ""; //clear the data string once we've printed it
+    }else{
+      Serial.println("Need to run a second time");
+    }
 }
 
 
