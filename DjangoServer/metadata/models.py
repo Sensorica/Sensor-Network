@@ -1,19 +1,29 @@
 from django.db import models
+from django.core.validators import RegexValidator
 import datetime
 
 
 # Create your models here.
 class Nodeowner(models.Model):
-    node_owner_id = models.IntegerField(default=0)
+    ad_client_id = models.DecimalField(max_digits=10,decimal_places=0,null=False,default=1000000)#Alternative Solution
+    ad_org_id = models.DecimalField(max_digits=10,decimal_places=0,null=False,default=1000000)
+    isactive = models.CharField(max_length=1, default='Y',null=False,)
     owner_name = models.CharField(max_length=200, default="NA")
+
+    #Table Tracing
+    nodeowner_created_by = models.DecimalField(max_digits=10,decimal_places=0,null=False,default=1000000)
+    nodeowner_created_timestamp = models.DateTimeField('Install Date',default=datetime.datetime.now,null=False)
+    nodeowner_updated_by = models.DecimalField(max_digits=10,decimal_places=0,null=False,default=1000000)
+    nodeowner_updated_timestamp = models.DateTimeField('Install Date',default=datetime.datetime.now,null=False)
+
 
     def __str__(self):
         return self.owner_name
 
+
 class Pump(models.Model):
     #IDs
     nodeowner = models.ForeignKey(Nodeowner,on_delete=models.CASCADE)
-    customer_id = models.IntegerField(default=0)
     pump_name = models.CharField(max_length=200,default='')
     customer_equipment_id = models.IntegerField(default=0)
 
@@ -55,7 +65,7 @@ class Pump(models.Model):
     pump_location_gps_longitude = models.FloatField(default=0)
     pump_location_gps_altitude = models.FloatField(default=0)
     sleeve_material = models.CharField(max_length=200,default='')
-    sleeve_install_date = models.DateTimeField('Install Date',default=datetime.datetime.now)
+    sleeve_install_date = models.DateTimeField('Install Date',default=datetime.datetime.now,null=False)
     sleeve_condition_at_start = models.IntegerField(default=0)
     is_from_bulk = models.BooleanField(default=False)
     is_precompressed = models.BooleanField(default=False)
@@ -90,9 +100,15 @@ class Pump(models.Model):
     cost_of_bearing_seal = models.FloatField(default=0)
     is_critical_application = models.BooleanField(default=False)
     sensor_configuration = models.CharField(max_length=200,default='')
-    node_install_date = models.DateTimeField('Node Install Date',default=datetime.datetime.now)
-    node_deploy_date = models.DateTimeField('Node Deploy Date',default=datetime.datetime.now)
+    node_install_date = models.DateTimeField('Node Install Date',default=datetime.datetime.now,null=False)
+    node_deploy_date = models.DateTimeField('Node Deploy Date',default=datetime.datetime.now,null=False)
     bearing_seal_type = models.CharField(max_length=200,default='')
+
+    #Table tracing
+    pump_created_by = models.DecimalField(max_digits=10,decimal_places=0,null=False,default=1000000)
+    pump_created_timestamp = models.DateTimeField('Install Date',default=datetime.datetime.now,null=False)
+    pump_updated_by = models.DecimalField(max_digits=10,decimal_places=0,null=False,default=1000000)
+    pump_updated_timestamp = models.DateTimeField('Install Date',default=datetime.datetime.now,null=False)
 
     def __str__(self):
         return self.pump_name
@@ -109,6 +125,11 @@ class Node(models.Model):
     node_hardware_version = models.CharField(max_length=200,default='')
     node_firmware_version = models.CharField(max_length=200,default='')
 
+    #Table tracing
+    node_created_by = models.DecimalField(max_digits=10,decimal_places=0,null=False,default=1000000)
+    node_created_timestamp = models.DateTimeField('Install Date',default=datetime.datetime.now,null=False)
+    node_updated_by = models.DecimalField(max_digits=10,decimal_places=0,null=False,default=1000000)
+    node_updated_timestamp = models.DateTimeField('Install Date',default=datetime.datetime.now,null=False)
 
     def __str__(self):
         return self.node_name
@@ -118,7 +139,7 @@ class PumpConfiguration(models.Model):
     pump = models.ForeignKey(Pump,on_delete=models.CASCADE)
     test_case_id = models.IntegerField(default=0)
     packing_name = models.CharField(max_length=200,default='')
-    start_time = models.DateTimeField('Test Start Time',default=datetime.datetime.now)
+    start_time = models.DateTimeField('Test Start Time',default=datetime.datetime.now,null=False)
     packing_inner_diameter_inches = models.FloatField(default=0)
     packing_outer_diameter_inches = models.FloatField(default=0)
     packing_thickness_inches = models.FloatField(default=0)
@@ -126,7 +147,13 @@ class PumpConfiguration(models.Model):
     fluid_type = models.CharField(max_length=200,default='')
     initial_node_voltage = models.FloatField(default=0)
     initial_temperature = models.FloatField(default=0)
-    end_time = models.DateTimeField('Test End Time', default=datetime.datetime.now)
+    end_time = models.DateTimeField('Test End Time', default=datetime.datetime.now,null=False)
+
+    #Table tracing
+    config_created_by = models.DecimalField(max_digits=10,decimal_places=0,null=False,default=1000000)
+    config_created_timestamp = models.DateTimeField('Install Date',default=datetime.datetime.now,null=False)
+    config_updated_by = models.DecimalField(max_digits=10,decimal_places=0,null=False,default=1000000)
+    config_updated_timestamp = models.DateTimeField('Install Date',default=datetime.datetime.now,null=False)
 
     def __str__(self):
         return "Test #" + self.test_case_id
@@ -135,19 +162,26 @@ class PumpConfiguration(models.Model):
 class ManualDatapoint(models.Model):
     models.ForeignKey(PumpConfiguration,on_delete=models.CASCADE)
     datapoint_id = models.IntegerField(default=0)
-    timestamp = models.DateTimeField('Timestamp', default=datetime.datetime.now)
+    timestamp = models.DateTimeField('Timestamp', default=datetime.datetime.now,null=False)
     time_to_failure = models.FloatField(default=-1) #set to -1 if you don't know yet
     out_pressure = models.FloatField(default=0)
     in_pressure = models.FloatField(default=0)
 
+    #Table tracing
+    data_created_by = models.DecimalField(max_digits=10,decimal_places=0,null=False,default=1000000)
+    data_created_timestamp = models.DateTimeField('Install Date',default=datetime.datetime.now,null=False)
+    data_updated_by = models.DecimalField(max_digits=10,decimal_places=0,null=False,default=1000000)
+    data_updated_timestamp = models.DateTimeField('Install Date',default=datetime.datetime.now,null=False)
+
     def __str__(self):
         return "Datapoint at #" + self.datapoint_id
+
 
 class SampleAutomaticDatapoint(models.Model):
     models.ForeignKey(Node,on_delete=models.CASCADE)
     node_id = models.IntegerField(default=0)
     datapoint_id = models.IntegerField(default=0)
-    timestamp = models.DateTimeField
+    timestamp = models.DateTimeField('Timestamp', default=datetime.datetime.now,null=False)
     load_washer_1_lbs = models.FloatField(default=0)
     load_washer_2_lbs = models.FloatField(default=0)
     gland_follower_position_inches = models.FloatField(default=0)
@@ -162,16 +196,17 @@ class SampleAutomaticDatapoint(models.Model):
     gland_temp_C = models.FloatField(default=0)
     rpm = models.IntegerField(default=0)
 
-
     def __str__(self):
         return "Datapoint at #" + self.datapoint_id
 
 
-
-class MaintenanceLog(models.Models):
+class MaintenanceLog(models.Model):
     models.ForeignKey(PumpConfiguration,on_delete=models.CASCADE)
-    timestamp = models.DateTimeField()
     activity = models.TextField(default='')
+
+    #Table tracing
+    created_by = models.DecimalField(max_digits=10,decimal_places=0,null=False,default=1000000)
+    created_timestamp = models.DateTimeField('Install Date',default=datetime.datetime.now,null=False)
 
 
 
