@@ -1,1 +1,8 @@
 export_to_csv/config_file.py
+DjangoServer/DjangoServer/__pycache__/settings.cpython-34.pyc
+DjangoServer/DjangoServer/settings.py
+DjangoServer/db.sqlite3
+DjangoServer/metadata/__pycache__/admin.cpython-34.pyc
+DjangoServer/metadata/__pycache__/models.cpython-34.pyc
+DjangoServer\.idea\workspace.xml
+
