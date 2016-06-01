@@ -5,4 +5,5 @@ DjangoServer/db.sqlite3
 DjangoServer/metadata/__pycache__/admin.cpython-34.pyc
 DjangoServer/metadata/__pycache__/models.cpython-34.pyc
 DjangoServer\.idea\workspace.xml
+DjangoServer/.idea/workspace.xml
 

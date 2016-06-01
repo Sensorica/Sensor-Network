@@ -1,3 +1,5 @@
+__author__ = 'scott'
+
 """
 Django settings for DjangoServer project.
 

@@ -202,7 +202,7 @@ class SampleAutomaticDatapoint(models.Model):
 
 class MaintenanceLog(models.Model):
     models.ForeignKey(PumpConfiguration,on_delete=models.CASCADE)
-    activity = models.TextField(default='')
+    activity = models.TextField(default='Tightening Gland Follower')
 
     #Table tracing
     created_by = models.DecimalField(max_digits=10,decimal_places=0,null=False,default=1000000)
