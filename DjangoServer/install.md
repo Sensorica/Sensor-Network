@@ -1,3 +1,6 @@
+Welcome to the Leaknet Django Administration Site code created by Sensorica. This document explains
+the basic steps to get started. 
+
 1. Install pre-requisites
 =========================
 
