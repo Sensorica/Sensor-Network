@@ -12,9 +12,9 @@ class Nodeowner(models.Model):
 
     #Table Tracing
     nodeowner_created_by = models.DecimalField(max_digits=10,decimal_places=0,null=False,default=1000000)
-    nodeowner_created_timestamp = models.DateTimeField('Install Date',default=datetime.datetime.now,null=False)
+    nodeowner_created_timestamp = models.DateTimeField('Created At Timestamp',default=datetime.datetime.now,null=False)
     nodeowner_updated_by = models.DecimalField(max_digits=10,decimal_places=0,null=False,default=1000000)
-    nodeowner_updated_timestamp = models.DateTimeField('Install Date',default=datetime.datetime.now,null=False)
+    nodeowner_updated_timestamp = models.DateTimeField('Updated At Timestamp',default=datetime.datetime.now,null=False)
 
 
     def __str__(self):

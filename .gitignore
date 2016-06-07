@@ -7,3 +7,6 @@ DjangoServer/metadata/__pycache__/models.cpython-34.pyc
 DjangoServer\.idea\workspace.xml
 DjangoServer/.idea/workspace.xml
 
+DjangoServer/static_in_pro/our_static/sponsor-image.png
+DjangoServer/static_in_pro/our_static/web2.png
+DjangoServer/static_in_pro/our_static/web3.png

@@ -21,9 +21,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
-# TODO: Move this into a private config file before we do a production build
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'fi1skma9*-zs1o#c6mz8%c14sn8@q_z8ychak!lx5h0a8+2k)v'
+SECRET_KEY = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -59,8 +58,7 @@ ROOT_URLCONF = 'DjangoServer.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,8 +76,6 @@ WSGI_APPLICATION = 'DjangoServer.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
-
-# TODO: SETUP DynamoDB as our database so everything can be stored in the same place
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -90,7 +86,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -132,14 +127,14 @@ STATIC_URL = '/static_in_pro/'
 
 # Used in deployment for where our files are served, collectstatic will push static files to here
 # This could be an S3 bucket in production
-STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static_in_pro','our_static')
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static_in_pro')
 
 # Used in development with django for where we store our files during development
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static_in_pro','our_static'),
-    # os.path.join(BASE_DIR, 'static_git'), #TODO: Point to all of our static files, including freeboard and list it here
+    os.path.join(os.path.dirname(BASE_DIR), 'static_in_pro','our_static'),
+    # os.path.join(BASE_DIR, 'static_in_pro','our_static'),
 )
 
+# This is more useful for media file uploads
 MEDIA_ROOT = os.path.join(BASE_DIR, 'my_media')
-
 MEDIA_URL = '/media/'

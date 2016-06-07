@@ -1,0 +1,29 @@
+{% extends "admin/base.html" %}
+
+{#{% block extrastyle %}#}
+{#<link href="adminextra.css" rel="stylesheet" type="text/css" media="screen,projection" />#}
+{#{% endblock %}#}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+
+{% block branding %}
+       <style>
+    #header{
+        background: #ED1B24;
+    }
+    .module caption{
+        background: #ED1B24;
+    }
+</style>
+        {% load staticfiles %}
+{#        You can insert your own image here... sponsor-image.png was not uploaded as the sponsor prefers to remain anonymous #}
+        <div id="logo-image"><img src="{% static "sponsor-image.png" %}" alt="{{ site_header|default:_('Django Admin') }}"></div>
+
+{#    Here is the old heading in case we want it back #}
+{#<h1 id="site-name" ><a href="{% url 'admin:index' %}">Admin Panel</a></h1>#}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+
