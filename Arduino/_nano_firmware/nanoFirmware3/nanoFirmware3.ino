@@ -24,7 +24,7 @@ SoftwareSerial mySerial(10, 11); // RX, TX
 
 int digitalSelectPin = 2;
 int digitalSleepPin = 3;
-String data;
+
 
 // Define various ADC prescaler variables
 const unsigned char PS_32_i = 0xe5; //Chosen Prescaler -> 32
@@ -42,7 +42,7 @@ int down_sampling_counter = 0;
 int down_sampling_rate = 1;
 
 //Print Variables
-String data_string = "";
+String data_string = "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
 
 ///////////////////////////////////////////////////SETUP////////////////////////////////////////////////////////
 void setup() {
@@ -69,15 +69,15 @@ void loop() {
   while(1) { // reduces jitter
 
   //DEBUG
-  if(mic_or_zxy_state==0){
-//    Serial.print("Microphone running");
-  }else if(mic_or_zxy_state==1) {
-//    Serial.print("VibrationX running");
-  }else if(mic_or_zxy_state==2){
-//    Serial.print("VibrationY running");
-  }else{
-//    Serial.print("VibrationZ running");
-  }
+//  if(mic_or_zxy_state==0){
+////    Serial.print("Microphone running");
+//  }else if(mic_or_zxy_state==1) {
+////    Serial.print("VibrationX running");
+//  }else if(mic_or_zxy_state==2){
+////    Serial.print("VibrationY running");
+//  }else{
+////    Serial.print("VibrationZ running");
+//  }
   
     
     cli();  // UDRE interrupt slows this way down on arduino1.0
@@ -150,52 +150,52 @@ void loop() {
 
 
 //////////////////////////////////////////////////////FUNCTIONS/////////////////////////////////////////////////
-void print_fft(){
-    Serial.println("Fourier Transform:");
-    for(int i = 0 ; i < FFT_N/2; i++){
-      Serial.print(fft_log_out[i]);
-      Serial.print(",");
-    }
-    Serial.println("");
-}
-
-void print_peaks(){ 
-    Serial.println("3dB Bandwidth:");
-    for(int i = 0 ; i < FFT_N/2; i++){
-      Serial.print(peak_power[i]);
-      Serial.print(",");
-    }
-    Serial.println("");
-}
-
-void print_max_peaks(){
- int scaling_factor = 1; //pos * BW_per_pos
-  if(mic_or_zxy_state==0){
-    Serial.println("Microphone Peaks At:");
-    scaling_factor = 133;
-  }else if(mic_or_zxy_state==1){
-    Serial.println("VibrationX Sensor Peaks At:");
-    scaling_factor = 7;
-  }else if(mic_or_zxy_state==2){
-    Serial.println("VibrationY Sensor Peaks At:");
-    scaling_factor = 7;
-  }else{
-    Serial.println("VibrationZ Sensor Peaks At:");
-    scaling_factor = 7;
-  }
- 
-    for(int i = 0 ; i < number_of_peaks; i++){
-      if(biggest_peaks[i]!=0){
-      Serial.print((biggest_peaks[i]+1)*scaling_factor); //Print out the frequency
-      }else{
-          Serial.print(0);
-      }
-      Serial.print(",");
-      Serial.print(peak_power[biggest_peaks[i]]); //Print out the power at that peak
-      Serial.print(",");
-    }
-    Serial.println("");
-}
+//void print_fft(){
+//    Serial.println("Fourier Transform:");
+//    for(int i = 0 ; i < FFT_N/2; i++){
+//      Serial.print(fft_log_out[i]);
+//      Serial.print(",");
+//    }
+//    Serial.println("");
+//}
+//
+//void print_peaks(){ 
+//    Serial.println("3dB Bandwidth:");
+//    for(int i = 0 ; i < FFT_N/2; i++){
+//      Serial.print(peak_power[i]);
+//      Serial.print(",");
+//    }
+//    Serial.println("");
+//}
+//
+//void print_max_peaks(){
+// int scaling_factor = 1; //pos * BW_per_pos
+//  if(mic_or_zxy_state==0){
+//    Serial.println("Microphone Peaks At:");
+//    scaling_factor = 133;
+//  }else if(mic_or_zxy_state==1){
+//    Serial.println("VibrationX Sensor Peaks At:");
+//    scaling_factor = 7;
+//  }else if(mic_or_zxy_state==2){
+//    Serial.println("VibrationY Sensor Peaks At:");
+//    scaling_factor = 7;
+//  }else{
+//    Serial.println("VibrationZ Sensor Peaks At:");
+//    scaling_factor = 7;
+//  }
+// 
+//    for(int i = 0 ; i < number_of_peaks; i++){
+//      if(biggest_peaks[i]!=0){
+//      Serial.print((biggest_peaks[i]+1)*scaling_factor); //Print out the frequency
+//      }else{
+//          Serial.print(0);
+//      }
+//      Serial.print(",");
+//      Serial.print(peak_power[biggest_peaks[i]]); //Print out the power at that peak
+//      Serial.print(",");
+//    }
+//    Serial.println("");
+//}
 
 void find_peaks(){
   //Initialize peak arrays
@@ -266,16 +266,16 @@ void soft_serial_max_peaks(){
  //Set the scaling factor based on the state
  int scaling_factor = 1; //pos * BW_per_pos
   if(mic_or_zxy_state==0){
-    Serial.println(" Microphone Software Serial Test:");
+//    Serial.println(" Microphone Software Serial Test:");
     scaling_factor = 133;
   }else if (mic_or_zxy_state==1){
-    Serial.println(" Vibration SoftwareX Serial Test:");
+//    Serial.println(" Vibration SoftwareX Serial Test:");
     scaling_factor = 7;
   }else if(mic_or_zxy_state==2){
-    Serial.println(" Vibration SoftwareY Serial Test:");
+//    Serial.println(" Vibration SoftwareY Serial Test:");
     scaling_factor = 7;
   }else{
-    Serial.println(" Vibration SoftwareZ Serial Test:");
+//    Serial.println(" Vibration SoftwareZ Serial Test:");
     scaling_factor = 7;
   }
 
@@ -315,15 +315,15 @@ void soft_serial_max_peaks(){
           Serial.write(mySerial.read());
       }
       
-      mySerial.print(data_string);
-//      delay(100);
-//      Serial.println (data_string); //If this doesn't print, then you may be having memory issues
-//      Serial.println ("Data was sent!");
+ //     mySerial.print(data_string);
+      delay(100);
+      Serial.println (data_string); //If this doesn't print, then you may be having memory issues
+      Serial.println ("Data was sent!");
       delay(100); //Give it some clearance to make sure everything printed (not sure if this is needed)
       data_string = ""; //clear the data string once we've printed it
       
     }else{
-      Serial.println("Need to run another time");
+//      Serial.println("Need to run another time");
     }
 }
 
