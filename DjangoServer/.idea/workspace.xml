@@ -2,154 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5fb1e3ea-24c2-4768-bc0c-d29b398c623e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/fonts/Roboto-Bold-webfont.woff" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/fonts/Roboto-Light-webfont.woff" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/fonts/Roboto-Regular-webfont.woff" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/public/fonts/aller-bold.eot" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/public/fonts/aller-bold.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/public/fonts/aller-bold.woff" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/public/fonts/aller-light.eot" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/public/fonts/aller-light.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/public/fonts/aller-light.woff" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/public/fonts/fleurons.eot" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/public/fonts/fleurons.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/public/fonts/fleurons.woff" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/public/fonts/novecento-bold.eot" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/public/fonts/novecento-bold.ttf" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/public/fonts/novecento-bold.woff" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/public/images/gray.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/img/dropdown-arrow.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/img/glyphicons-blackboard.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/img/glyphicons-halflings-white.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/img/glyphicons-halflings.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/img/glyphicons-log-in.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/img/glyphicons-log-out.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DjangoServer/templates/admin/adminextra.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DjangoServer/templates/admin/base.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DjangoServer/templates/admin/base_site.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/css/base.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/css/changelists.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/css/dashboard.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/css/fonts.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/css/forms.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/css/login.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/css/rtl.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/css/widgets.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/fonts/LICENSE.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/fonts/README.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/README.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/calendar-icons.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/gis/move_vertex_off.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/gis/move_vertex_on.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/icon-addlink.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/icon-alert.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/icon-calendar.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/icon-changelink.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/icon-clock.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/icon-deletelink.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/icon-no.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/icon-unknown-alt.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/icon-unknown.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/icon-yes.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/inline-delete.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/search.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/selector-icons.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/sorting-icons.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/tooltag-add.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/img/tooltag-arrowright.svg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/SelectBox.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/SelectFilter2.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/actions.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/actions.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/admin/DateTimeShortcuts.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/admin/RelatedObjectLookups.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/calendar.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/collapse.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/collapse.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/core.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/inlines.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/inlines.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/jquery.init.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/prepopulate.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/prepopulate.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/timeparse.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/urlify.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/vendor/jquery/LICENSE-JQUERY.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/vendor/jquery/jquery.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/vendor/jquery/jquery.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/vendor/xregexp/LICENSE-XREGEXP.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/admin/js/vendor/xregexp/xregexp.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/Gruntfile.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/css/freeboard.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/css/freeboard.min.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/build-docs.sh" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/docco-fb.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/docco.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/plugin_example.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/docs/public/stylesheets/normalize.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/examples/altGuage.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/examples/plugin_example.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/examples/rl78.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/examples/weather.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/index-dev.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/index.html" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/js/freeboard.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/js/freeboard.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/js/freeboard.min.js.map" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/js/freeboard.plugins.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/js/freeboard.plugins.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/js/freeboard.plugins.min.js.map" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/js/freeboard.thirdparty.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/js/freeboard.thirdparty.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/js/freeboard_plugins.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/js/freeboard_plugins.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/js/freeboard_plugins.min.js.map" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/css/freeboard/styles.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/css/thirdparty/codemirror-ambiance.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/css/thirdparty/codemirror.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/css/thirdparty/jquery.gridster.min.css" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/freeboard/DatasourceModel.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/freeboard/DeveloperConsole.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/freeboard/DialogBox.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/freeboard/FreeboardModel.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/freeboard/FreeboardUI.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/freeboard/JSEditor.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/freeboard/PaneModel.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/freeboard/PluginEditor.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/freeboard/ValueEditor.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/freeboard/WidgetModel.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/freeboard/freeboard.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/thirdparty/codemirror.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/thirdparty/head.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/thirdparty/jquery-ui.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/thirdparty/jquery.caret.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/thirdparty/jquery.gridster.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/thirdparty/jquery.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/thirdparty/jquery.xdomainrequest.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/thirdparty/knockout.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/lib/js/thirdparty/underscore.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/package.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/plugins/freeboard/freeboard.datasources.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/plugins/freeboard/freeboard.widgets.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/plugins/thirdparty/jquery.sparkline.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/plugins/thirdparty/justgage.1.0.1.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/plugins/thirdparty/raphael.2.1.0.min.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/test.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/test/casper/tests/smoke_test.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/test/casper/util/test_util.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/test/fixtures/input.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static_in_pro/freeboard/test/run_browser_tests.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DjangoServer/db.sqlite3" afterPath="$PROJECT_DIR$/DjangoServer/db.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../.gitignore" afterPath="$PROJECT_DIR$/../.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DjangoServer/settings/base.py" afterPath="$PROJECT_DIR$/DjangoServer/settings/base.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/metadata/models.py" afterPath="$PROJECT_DIR$/metadata/models.py" />
     </list>
     <ignored path="DjangoServer.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -195,7 +48,7 @@
       <file leaf-file-name="base_site.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/DjangoServer/templates/admin/base_site.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19">
+            <state relative-caret-position="68">
               <caret line="4" column="18" selection-start-line="4" selection-start-column="18" selection-end-line="4" selection-end-column="18" />
               <folding />
             </state>
@@ -329,8 +182,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -445,6 +296,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -771,17 +624,17 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="1" y="0" width="1598" height="860" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3407022" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3287483" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3452536" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3282967" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27448454" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287483" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3543956" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32967034" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2517194" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25137362" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -1017,7 +870,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
           <caret line="10" column="32" selection-start-line="10" selection-start-column="32" selection-end-line="10" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1025,7 +877,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
           <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1033,7 +884,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1041,7 +891,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1049,7 +898,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1057,7 +905,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1065,7 +912,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1073,7 +919,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
           <caret line="13" column="5" selection-start-line="13" selection-start-column="5" selection-end-line="13" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1081,7 +926,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
           <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1089,7 +933,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1097,7 +940,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1105,7 +947,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
           <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1113,24 +954,22 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
           <caret line="12" column="28" selection-start-line="12" selection-start-column="28" selection-end-line="12" selection-end-column="28" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
-      <provider editor-type-id="MarkdownFxPreviewEditor">
-        <state />
-      </provider>
       <provider editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="34" column="3" selection-start-line="34" selection-start-column="3" selection-end-line="34" selection-end-column="3" />
         </state>
       </provider>
+      <provider editor-type-id="MarkdownFxPreviewEditor">
+        <state />
+      </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
         <state split_layout="FIRST">
           <first_editor relative-caret-position="170">
             <caret line="10" column="10" selection-start-line="10" selection-start-column="10" selection-end-line="10" selection-end-column="10" />
-            <folding />
           </first_editor>
           <second_editor />
         </state>
@@ -1140,7 +979,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="274">
           <caret line="19" column="22" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1148,7 +986,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1156,31 +993,18 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
           <caret line="76" column="91" selection-start-line="76" selection-start-column="84" selection-end-line="76" selection-end-column="91" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/admin/base_site.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/admin/base_site.html" />
     <entry file="file://$PROJECT_DIR$/DjangoServer/templates/admin/base.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="161">
           <caret line="21" column="21" selection-start-line="21" selection-start-column="21" selection-end-line="21" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/my_media/r-robco-web2.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/my_media/r-robco-web2.png" />
     <entry file="file://$PROJECT_DIR$/metadata/admin.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
@@ -1193,7 +1017,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="68">
           <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1215,7 +1038,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DjangoServer/templates/admin/base_site.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
+        <state relative-caret-position="68">
           <caret line="4" column="18" selection-start-line="4" selection-start-column="18" selection-end-line="4" selection-end-column="18" />
           <folding />
         </state>

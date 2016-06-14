@@ -228,7 +228,7 @@ double position2_mm = 0;
 void setup()
 {
   
-  Serial.begin(4800);        //Enable serial at high speed 
+  Serial.begin(9600);        //Enable serial at high speed 
   analogReference(EXTERNAL); //Important or we send 5V into the 3V3 pin!
   
   // Tachometer setup
@@ -482,29 +482,34 @@ if (flowTrigger){
     data += ",";
     data += rpm;
     data += ",";
-    data += load1_in_lbs;
+    data += load1_in_lbs; //Load Washers
     data += ",";
-    data += load2_in_lbs;
+    data += load2_in_lbs; //Load Washers
     data += ",";
     data += flow_rate_cc_per_sec; //This is for the level sensor rate
     data += ",";
     data += flowrate; // This is for the flow sensor
     data += ",";
-    data += position1_mm;
+    data += position1_mm; //Displacement sensor1
     data += ",";
-    data += position2_mm;
+    data += position2_mm; //Displacement sensor2
 
     //Signal the FFT to take measurements
     mySerial.write("!");
 
+    long int counter =0;
     //Wait for the response from the FFT
-    while(!mySerial.available()){
+    while(!mySerial.available()){ 
+      if(counter>=100000){
+        break;   //Break after a while to avoid deadlock
+      }
+      counter++;
     }
 
   Serial.print(data);
 
   //This loop prints the data from the FFT. The waits 
-for (int i = 0; i < 21; i++){
+for (int i = 0; i < 50; i++){
     while(mySerial.available()){
       Serial.write(mySerial.read());
     }
@@ -513,7 +518,7 @@ for (int i = 0; i < 21; i++){
    
     Serial.println("");
     
-    //////////////////////////////////////////////////////Go back to Zero Delay Loop
+    //////////////////////////////////////////////////////Go back to Zero Delay Loop/////////////////////////////////////////////
     attachInterrupt (0, revolution, RISING);  // re-attach interrupt handler for tachometer
     attachInterrupt (1, flowCalc, RISING);  // re-attach interrupt handler for flush flow rate sensor
     last_print_time = millis();
