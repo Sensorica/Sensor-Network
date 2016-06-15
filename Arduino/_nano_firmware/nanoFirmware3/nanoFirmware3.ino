@@ -62,7 +62,7 @@ void setup() {
   pinMode(digitalSelectPin, OUTPUT);
   digitalWrite(digitalSelectPin, LOW); //Set to HIGH for 6G sensitivity, OR LOW for 1.5G sensitivity
   digitalWrite(digitalSleepPin, HIGH);
-  Serial.begin(4800); // use the serial port
+  Serial.begin(9600); // use the serial port
   TIMSK0 = 0; //Reduces jitter
   ADCSRA = PS_32_i; //Set Prescaler Value
   ADMUX = 0x40; // use adc0
