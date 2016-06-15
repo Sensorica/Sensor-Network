@@ -107,8 +107,8 @@ void revolution (){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 //                                                 4. LOAD WASHER 1 & 2
 
-int loadWasher1Pin = A4;
-int loadWasher2Pin = A5;
+int loadWasher1Pin = A5;
+int loadWasher2Pin = A6;
 
 //Insert Calibration Data Here: Level = AX + B format (rounded to the nearest integer N)
 //We assume that the two load washers have the same calibration curve
@@ -133,7 +133,7 @@ double load2_in_lbs = 0;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 //                                                5. LEVEL SENSOR
 
-int levelSensorPin = A3;
+int levelSensorPin = A4;
 
 //Insert Calibration Data Here: Level = AX + B format (rounded to the nearest integer N)
 //X is the water depth in cm
