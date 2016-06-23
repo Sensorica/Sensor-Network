@@ -133,7 +133,7 @@ double load2_in_lbs = 0;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 //                                                5. LEVEL SENSOR
 
-int levelSensorPin = A4;
+int levelSensorPin = A3;
 
 //Insert Calibration Data Here: Level = AX + B format (rounded to the nearest integer N)
 //X is the water depth in cm
