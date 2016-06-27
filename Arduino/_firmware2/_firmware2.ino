@@ -494,27 +494,73 @@ if (flowTrigger){
     data += ",";
     data += position2_mm; //Displacement sensor2
 
-    //Signal the FFT to take measurements
-    mySerial.write("!");
+   boolean data_received = false;
+   String data_mic = "";
+   String data_x = "";
+   String data_y = "";
+   String data_z = "";
 
-    long int counter =0;
-    //Wait for the response from the FFT
-    while(!mySerial.available()){ 
-      if(counter>=100000){
-        break;   //Break after a while to avoid deadlock
-      }
-      counter++;
+
+   mySerial.write("M");
+   for (int i = 0; i < 30; i++){
+      while(mySerial.available()){
+        data_mic += char(mySerial.read());
+       }
+       delay(5); //This delay help wait until the mySerial is available (not sure what the optimal value is here)
     }
 
-  Serial.print(data);
-
-  //This loop prints the data from the FFT. The waits 
-for (int i = 0; i < 50; i++){
-    while(mySerial.available()){
-      Serial.write(mySerial.read());
+    
+    mySerial.print("X");
+    for (int i = 0; i < 30; i++){
+      while(mySerial.available()){
+        data_x += char(mySerial.read());
+       }
+       delay(5); //This delay help wait until the mySerial is available (not sure what the optimal value is here)
     }
-    delay(5); //This delay help wait until the mySerial is available (not sure what the optimal value is here)
-}
+    mySerial.print("Y");
+   for (int i = 0; i < 30; i++){
+      while(mySerial.available()){
+        data_y += char(mySerial.read());
+       }
+       delay(5); //This delay help wait until the mySerial is available (not sure what the optimal value is here)
+    }
+    mySerial.print("Z");
+   for (int i = 0; i < 30; i++){
+      while(mySerial.available()){
+        data_z += char(mySerial.read());
+       }
+       delay(5); //This delay help wait until the mySerial is available (not sure what the optimal value is here)
+    }
+    mySerial.print("E");
+    
+
+  //mySerial.print("X");
+
+    
+//    //Signal the FFT to take measurements
+//    mySerial.write("!");
+//
+//    long int counter =0;
+//    //Wait for the response from the FFT
+//    while(!mySerial.available()){ 
+//      if(counter>=100000){
+//        break;   //Break after a while to avoid deadlock
+//      }
+//      counter++;
+//    }
+
+  Serial.println("DATA = " + data);
+  Serial.println("MIC = " + data_mic);
+  Serial.println("X = " + data_x);
+  Serial.println("Y = " + data_y);
+  Serial.println("Z = " + data_z);
+//  //This loop prints the data from the FFT. The waits 
+//for (int i = 0; i < 50; i++){
+//    while(mySerial.available()){
+//      Serial.write(mySerial.read());
+//    }
+//    delay(5); //This delay help wait until the mySerial is available (not sure what the optimal value is here)
+//}
    
     Serial.println("");
     
