@@ -216,7 +216,7 @@ long int NODE_ID = 1;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            11. POSITION SENSOR
 
-int positionSignal1 = A2;
+int positionSignal1 = A0;
 int positionSignal2= A1;
 double position1 = 0;
 double position2 = 0;
@@ -482,9 +482,9 @@ if (flowTrigger){
     data += ",";
     data += rpm;
     data += ",";
-    data += load1_in_lbs; //Load Washers
+//    data += load1_in_lbs; //Load Washers
     data += ",";
-    data += load2_in_lbs; //Load Washers
+//    data += load2_in_lbs; //Load Washers
     data += ",";
     data += flow_rate_cc_per_sec; //This is for the level sensor rate
     data += ",";
