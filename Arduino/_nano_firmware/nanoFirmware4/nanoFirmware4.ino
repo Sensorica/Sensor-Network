@@ -42,12 +42,16 @@ int down_sampling_counter = 0;
 int down_sampling_rate = 1;
 
 //Print Variables
-String data_string = "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+String data_string = "";
+String data_string_mic = "";
+String data_string_x = "";
+String data_string_y = "";
+String data_string_z = "";
+String data_request = "";
 
 ///////////////////////////////////////////////////SETUP////////////////////////////////////////////////////////
 void setup() {
   mySerial.begin(4800);
-  data_string="";
   pinMode(digitalSelectPin, OUTPUT);
   digitalWrite(digitalSelectPin, LOW); //Set to HIGH for 6G sensitivity, OR LOW for 1.5G sensitivity
   digitalWrite(digitalSleepPin, HIGH);
@@ -141,7 +145,7 @@ void loop() {
     }else if (mic_or_zxy_state == 3){
       //SWITCH BACK TO MICROPHONE
       mic_or_zxy_state = 0; //set to microphone mode
-      down_sampling_rate =0;// microphone mode 
+      down_sampling_rate =1;// microphone mode 
       ADMUX = 0x40; // use adc0
       noise_floor = 100;
     }
@@ -266,20 +270,9 @@ void soft_serial_max_peaks(){
  //Set the scaling factor based on the state
  int scaling_factor = 1; //pos * BW_per_pos
   if(mic_or_zxy_state==0){
-//    Serial.println(" Microphone Software Serial Test:");
+    
     scaling_factor = 133;
-  }else if (mic_or_zxy_state==1){
-//    Serial.println(" Vibration SoftwareX Serial Test:");
-    scaling_factor = 7;
-  }else if(mic_or_zxy_state==2){
-//    Serial.println(" Vibration SoftwareY Serial Test:");
-    scaling_factor = 7;
-  }else{
-//    Serial.println(" Vibration SoftwareZ Serial Test:");
-    scaling_factor = 7;
-  }
-
-  //Build the printout string
+      //Build the printout string
    for(int i = 0; i < number_of_peaks; i++){
 
     //What we want:
@@ -288,39 +281,171 @@ void soft_serial_max_peaks(){
       
       //Print out the frequency
       if(biggest_peaks[i]!=0){ //In the case of zero don't print the scaling factor
-        data_string += ","; 
-        data_string += ((biggest_peaks[i]+1)*scaling_factor);
+        data_string_mic += ","; 
+        data_string_mic += ((biggest_peaks[i]+1)*scaling_factor);
       }else{ 
         //In the case of zero don't print the scaling factor
-         data_string += ",";
-         data_string += "0";
+         data_string_mic += ",";
+         data_string_mic += "0";
       }
       
       //Print the power at that peak  
-      data_string += ",";
-      data_string += (peak_power[biggest_peaks[i]]);
+      data_string_mic += ",";
+      data_string_mic += (peak_power[biggest_peaks[i]]);
     }
+    
+//    Serial.println(" Microphone Software Serial Test:");
+
+  }else if (mic_or_zxy_state==1){
+    scaling_factor = 7;
+      //Build the printout string
+   for(int i = 0; i < number_of_peaks; i++){
+
+    //What we want:
+    // 1. Print out the peaks,
+    // 2. Print out the power levels
+      
+      //Print out the frequency
+      if(biggest_peaks[i]!=0){ //In the case of zero don't print the scaling factor
+        data_string_x += ","; 
+        data_string_x += ((biggest_peaks[i]+1)*scaling_factor);
+      }else{ 
+        //In the case of zero don't print the scaling factor
+         data_string_x += ",";
+         data_string_x += "0";
+      }
+      
+      //Print the power at that peak  
+      data_string_x += ",";
+      data_string_x += (peak_power[biggest_peaks[i]]);
+    }
+    
+//    Serial.println(" Vibration SoftwareX Serial Test:");
+
+  }else if(mic_or_zxy_state==2){
+   
+   scaling_factor = 7;
+      //Build the printout string
+   for(int i = 0; i < number_of_peaks; i++){
+
+    //What we want:
+    // 1. Print out the peaks,
+    // 2. Print out the power levels
+      
+      //Print out the frequency
+      if(biggest_peaks[i]!=0){ //In the case of zero don't print the scaling factor
+        data_string_y += ","; 
+        data_string_y += ((biggest_peaks[i]+1)*scaling_factor);
+      }else{ 
+        //In the case of zero don't print the scaling factor
+         data_string_y += ",";
+         data_string_y += "0";
+      }
+      
+      //Print the power at that peak  
+      data_string_y += ",";
+      data_string_y += (peak_power[biggest_peaks[i]]);
+    }
+    
+//    Serial.println(" Vibration SoftwareY Serial Test:");
+
+  }else{
+//    Serial.println(" Vibration SoftwareZ Serial Test:");
+    scaling_factor = 7;
+
+      //Build the printout string
+   for(int i = 0; i < number_of_peaks; i++){
+
+    //What we want:
+    // 1. Print out the peaks,
+    // 2. Print out the power levels
+      
+      //Print out the frequency
+      if(biggest_peaks[i]!=0){ //In the case of zero don't print the scaling factor
+        data_string_z += ","; 
+        data_string_z += ((biggest_peaks[i]+1)*scaling_factor);
+      }else{ 
+        //In the case of zero don't print the scaling factor
+         data_string_z += ",";
+         data_string_z += "0";
+      }
+      
+      //Print the power at that peak  
+      data_string_z += ",";
+      data_string_z += (peak_power[biggest_peaks[i]]);
+    }
+    
+  }
+
 
 //    Serial.println(data_string);
 
     //Print out to the node after the fourth iteration
     if(mic_or_zxy_state==3){
-       
-      //Here we have our data ready... wait for the signal to send it
+
+  int loool = 0;
+    
+    while(true){
+
       while(!mySerial.available()){
       }
-        
-      //Print out the ! to confirm that we received it
-      while(mySerial.available()){
-          Serial.write(mySerial.read());
+
+
+
+
+    data_request = char(mySerial.read());
+
+//    Serial.print(data_request);
+//    Serial.print(" ");
+
+      
+      if(data_request == "M"){
+        mySerial.print(data_string_mic);
+        Serial.println("M is sent: " + data_string_mic);
+      }else if(data_request == "X"){
+        mySerial.print(data_string_x);
+        Serial.println("X is sent: " + data_string_x);
+      }else if(data_request == "Y"){
+        mySerial.print(data_string_y);
+        Serial.println("Y is sent: " + data_string_y);
+      }else if(data_request == "Z"){
+        mySerial.print(data_string_z);
+        Serial.println("Z is sent: " + data_string_z);
+      }else if(data_request == "E"){
+        Serial.println("E is received");
+        break;
       }
       
+    }
+
+      data_string_mic = "";
+      data_string_x = "";
+      data_string_y = "";
+      data_string_z = "";    
+
+
+
+    
+      //Here we have our data ready... wait for the signal to send it
+//      while(!mySerial.available()){
+//      }
+//        
+//      //Print out the ! to confirm that we received it
+//      while(mySerial.available()){
+//          Serial.write(mySerial.read());
+//      }
+
+    
+
+
+      
  //     mySerial.print(data_string);
-      delay(100);
-      Serial.println (data_string); //If this doesn't print, then you may be having memory issues
-      Serial.println ("Data was sent!");
-      delay(100); //Give it some clearance to make sure everything printed (not sure if this is needed)
-      data_string = ""; //clear the data string once we've printed it
+//      delay(100);
+//      Serial.println (data_string); //If this doesn't print, then you may be having memory issues
+//      Serial.println ("Data was sent!");
+//      delay(100); //Give it some clearance to make sure everything printed (not sure if this is needed)
+//      data_string = ""; //clear the data string once we've printed it
+
       
     }else{
 //      Serial.println("Need to run another time");
