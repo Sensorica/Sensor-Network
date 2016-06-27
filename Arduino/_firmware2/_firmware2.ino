@@ -556,11 +556,11 @@ if (flowTrigger){
 //  Serial.println("Z = " + data_z);
 
   
-  Serial.print(data);
-  Serial.print(data_mic);
-  Serial.print(data_x);
-  Serial.print(data_y);
-  Serial.print(data_z);
+  Serial.print("D" + data);
+  Serial.print("M" + data_mic);
+  Serial.print("X" + data_x);
+  Serial.print("Y" + data_y);
+  Serial.print("Z" + data_z);
   
 //  //This loop prints the data from the FFT. The waits 
 //for (int i = 0; i < 50; i++){
