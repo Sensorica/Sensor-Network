@@ -140,7 +140,7 @@ int levelSensorPin = A3;
 //A is the calibration slope in levels / cm
 //B is the reference level
 double A_water_rate = 12.125;
-double B_water_reference_level = 789.25;
+double B_water_reference_level = 845;
 double vesicle_diameter_cm = 11.43;//4.5 inch x 2.54 cm / inch
 double vesicle_area_cm_2 = (3.14159) * (vesicle_diameter_cm / 2) * (vesicle_diameter_cm / 2);
 
@@ -232,7 +232,7 @@ void setup()
   analogReference(EXTERNAL); //Important or we send 5V into the 3V3 pin!
   
   // Tachometer setup
-  pinMode(solenoidValvePin,OUTPUT);
+  pinMode(solenoidValvePin,OUTPUT);\
   digitalWrite (TACH, HIGH);  // internal pull-up resistor built in :-)
   attachInterrupt (digitalPinToInterrupt(2), revolution, RISING);  // attach interrupt handler for tachometer
   attachInterrupt (digitalPinToInterrupt(3), flowCalc, RISING);  // attach interrupt handler for flow meter
@@ -482,9 +482,9 @@ if (flowTrigger){
     data += ",";
     data += rpm;
     data += ",";
-//    data += load1_in_lbs; //Load Washers
+    data += load1_in_lbs; //Load Washers
     data += ",";
-//    data += load2_in_lbs; //Load Washers
+    data += load2_in_lbs; //Load Washers
     data += ",";
     data += flow_rate_cc_per_sec; //This is for the level sensor rate
     data += ",";
@@ -549,18 +549,18 @@ if (flowTrigger){
 //      counter++;
 //    }
 
-  Serial.println("DATA = " + data);
-  Serial.println("MIC = " + data_mic);
-  Serial.println("X = " + data_x);
-  Serial.println("Y = " + data_y);
-  Serial.println("Z = " + data_z);
+//  Serial.println("DATA = " + data);
+//  Serial.println("MIC = " + data_mic);
+//  Serial.println("X = " + data_x);
+//  Serial.println("Y = " + data_y);
+//  Serial.println("Z = " + data_z);
 
   
-//  Serial.print(data);
-//  Serial.print(data_mic);
-//  Serial.print(data_x);
-//  Serial.print(data_y);
-//  Serial.print(data_z);
+  Serial.print(data);
+  Serial.print(data_mic);
+  Serial.print(data_x);
+  Serial.print(data_y);
+  Serial.print(data_z);
   
 //  //This loop prints the data from the FFT. The waits 
 //for (int i = 0; i < 50; i++){
