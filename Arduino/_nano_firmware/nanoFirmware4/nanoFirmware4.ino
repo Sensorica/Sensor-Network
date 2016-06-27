@@ -51,7 +51,7 @@ String data_request = "";
 
 ///////////////////////////////////////////////////SETUP////////////////////////////////////////////////////////
 void setup() {
-  mySerial.begin(4800);
+  mySerial.begin(57600);
   pinMode(digitalSelectPin, OUTPUT);
   digitalWrite(digitalSelectPin, LOW); //Set to HIGH for 6G sensitivity, OR LOW for 1.5G sensitivity
   digitalWrite(digitalSleepPin, HIGH);
@@ -147,7 +147,7 @@ void loop() {
       mic_or_zxy_state = 0; //set to microphone mode
       down_sampling_rate =1;// microphone mode 
       ADMUX = 0x40; // use adc0
-      noise_floor = 100;
+      noise_floor = 75;
     }
   }
 }
