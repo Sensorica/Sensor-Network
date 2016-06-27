@@ -502,7 +502,7 @@ if (flowTrigger){
 
 
    mySerial.write("M");
-   for (int i = 0; i < 30; i++){
+   for (int i = 0; i < 20; i++){
       while(mySerial.available()){
         data_mic += char(mySerial.read());
        }
@@ -511,21 +511,21 @@ if (flowTrigger){
 
     
     mySerial.print("X");
-    for (int i = 0; i < 30; i++){
+    for (int i = 0; i < 20; i++){
       while(mySerial.available()){
         data_x += char(mySerial.read());
        }
        delay(5); //This delay help wait until the mySerial is available (not sure what the optimal value is here)
     }
     mySerial.print("Y");
-   for (int i = 0; i < 30; i++){
+   for (int i = 0; i < 20; i++){
       while(mySerial.available()){
         data_y += char(mySerial.read());
        }
        delay(5); //This delay help wait until the mySerial is available (not sure what the optimal value is here)
     }
     mySerial.print("Z");
-   for (int i = 0; i < 30; i++){
+   for (int i = 0; i < 20; i++){
       while(mySerial.available()){
         data_z += char(mySerial.read());
        }

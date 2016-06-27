@@ -401,16 +401,16 @@ void soft_serial_max_peaks(){
       
       if(data_request == "M"){
         mySerial.print(data_string_mic);
-        Serial.println("M is sent");
+        Serial.println("M is sent: " + data_string_mic);
       }else if(data_request == "X"){
         mySerial.print(data_string_x);
-        Serial.println("X is sent");
+        Serial.println("X is sent: " + data_string_x);
       }else if(data_request == "Y"){
         mySerial.print(data_string_y);
-        Serial.println("Y is sent");
+        Serial.println("Y is sent: " + data_string_y);
       }else if(data_request == "Z"){
         mySerial.print(data_string_z);
-        Serial.println("Z is sent");
+        Serial.println("Z is sent: " + data_string_z);
       }else if(data_request == "E"){
         Serial.println("E is received");
         break;
