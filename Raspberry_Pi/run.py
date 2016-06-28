@@ -54,15 +54,19 @@ mqttc.loop_start()
 #main data loop
 while True:
     
-    #read serial port and trim spaces 
-    incomingData1 = ser.readline().strip()
+	
+	#read serial port and trim spaces 
+    while tokenizeData1[0] != "DATA":
+	
+        incomingData1 = ser.readline().strip()
+        tokenizedData1 = incomingData.split(",")
+		
     incomingData2 = ser.readline().strip()
     incomingData3 = ser.readline().strip()
     incomingData4 = ser.readline().strip()
     incomingData5 = ser.readline().strip()
     
     #splits comma seperated data into an array
-    tokenizedData1 = incomingData.split(",")
     tokenizedData2 = incomingData.split(",")
     tokenizedData3 = incomingData.split(",")
     tokenizedData4 = incomingData.split(",")
