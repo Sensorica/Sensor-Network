@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                           SENSOR NETWORK FIRMWARE
+//                                           SENSOR NETWORK FIRMWARE :-)
 //
 // This is the code for the sensor node. It integrates the following SENSORS/ACTUATORS 
 //  and prints data to the serial monitor. 
