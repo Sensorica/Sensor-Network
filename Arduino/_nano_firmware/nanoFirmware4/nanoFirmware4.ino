@@ -132,14 +132,14 @@ void loop() {
       //SWITCH BACK TO VIBRATION X SENSOR
       mic_or_zxy_state = 2; //set to vibration mode
       down_sampling_rate =20;//vibration mode uses downsampling factor 20
-      ADMUX = 0x42; // change it to adc1
+      ADMUX = 0x42; // change it to adc2
       noise_floor = 50;
 
     }else if (mic_or_zxy_state == 2){
       //SWITCH BACK TO VIBRATION X SENSOR
       mic_or_zxy_state = 3; //set to vibration mode
       down_sampling_rate =20;//vibration mode uses downsampling factor 20
-      ADMUX = 0x43; // change it to adc1
+      ADMUX = 0x43; // change it to adc3
       noise_floor = 50;
       
     }else if (mic_or_zxy_state == 3){
