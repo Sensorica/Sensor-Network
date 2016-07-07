@@ -51,7 +51,7 @@ String data_request = "";
 
 ///////////////////////////////////////////////////SETUP////////////////////////////////////////////////////////
 void setup() {
-  mySerial.begin(4800);
+  mySerial.begin(57600);
   pinMode(digitalSelectPin, OUTPUT);
   digitalWrite(digitalSelectPin, LOW); //Set to HIGH for 6G sensitivity, OR LOW for 1.5G sensitivity
   digitalWrite(digitalSleepPin, HIGH);
@@ -132,14 +132,14 @@ void loop() {
       //SWITCH BACK TO VIBRATION X SENSOR
       mic_or_zxy_state = 2; //set to vibration mode
       down_sampling_rate =20;//vibration mode uses downsampling factor 20
-      ADMUX = 0x42; // change it to adc1
+      ADMUX = 0x42; // change it to adc2
       noise_floor = 50;
 
     }else if (mic_or_zxy_state == 2){
       //SWITCH BACK TO VIBRATION X SENSOR
       mic_or_zxy_state = 3; //set to vibration mode
       down_sampling_rate =20;//vibration mode uses downsampling factor 20
-      ADMUX = 0x43; // change it to adc1
+      ADMUX = 0x43; // change it to adc3
       noise_floor = 50;
       
     }else if (mic_or_zxy_state == 3){
@@ -147,7 +147,7 @@ void loop() {
       mic_or_zxy_state = 0; //set to microphone mode
       down_sampling_rate =1;// microphone mode 
       ADMUX = 0x40; // use adc0
-      noise_floor = 100;
+      noise_floor = 75;
     }
   }
 }
