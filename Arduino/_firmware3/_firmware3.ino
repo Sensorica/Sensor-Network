@@ -26,6 +26,7 @@
 
 //Analog sensors
 //+5V Position Sensor
+//+5 Film sensor
 //+3.3V Fluid Leve
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            0. NODE ID
@@ -63,8 +64,8 @@ int index_water=0;
 //X is the water depth in cm
 //A is the calibration slope in levels / cm
 //B is the reference level
-double A_water_rate = 12.125;
-double B_water_reference_level = 300;
+double A_water_rate = 5; // difference in bits per cm
+double B_water_reference_level = 323;
 double vesicle_diameter_cm = 11.43;//4.5 inch x 2.54 cm / inch
 double vesicle_area_cm_2 = (3.14159) * (vesicle_diameter_cm / 2) * (vesicle_diameter_cm / 2);
 
@@ -73,26 +74,36 @@ boolean initialize = true;
 int analog_water_level = 0;
 const int water_level_sample_window = 30;
 double water_level_samples[water_level_sample_window];
+double water_level_total = 0;
 double water_level_cm = 0;
 double flow_calc_water_level_cm = 0;
 unsigned long calc_time_ms = 0;
 
 void fluid_level_sensor(){
+
+  water_level_total -= water_level_samples[index_water];
+
   analog_water_level = analogRead(levelSensorPin);
-  // Serial.print ("Water level: ");
-  //Serial.println (analog_water_level);
-  // delay (250);
-  // Stores samples
+  //Serial.println(analog_water_level);
   water_level_samples[index_water] = ( analog_water_level - B_water_reference_level ) / A_water_rate;
+  water_level_total += water_level_samples[index_water];
+  index_water++;
+ 
+  if (index_water == water_level_sample_window) index_water = 0;
+  water_level_cm = water_level_total / water_level_sample_window;
+
+  //Serial.println(analog_water_level);
+  //Serial.println(water_level_cm);
+
 
 ////take the average over the window
 //if(index_water==0){
-for (int i = 0 ; i< water_level_sample_window; i++){
-  water_level_cm+= water_level_samples[index_water];
-  }
- water_level_cm = water_level_cm / water_level_sample_window;
-//}
- index_water = index_water%water_level_sample_window;
+//for (int i = 0 ; i< water_level_sample_window; i++){
+//  water_level_cm+= water_level_samples[index_water];
+//  }
+// water_level_cm = water_level_cm / water_level_sample_window;
+////}
+// index_water = index_water%water_level_sample_window;
 
 ////Set the reference water level for a calculation (when appropriate)
   if(initialize==true){
@@ -108,8 +119,8 @@ for (int i = 0 ; i< water_level_sample_window; i++){
 
 
 int solenoidValvePin = 12; //Pin controlling the valve
-int drain_at_cm_level = 12; //5 inches 
-int close_valve_at_cm_level = 5.08; //2 inches
+int drain_at_cm_level = 15; //5 inches
+int close_valve_at_cm_level = 5; //2 inches
 
 boolean solenoid_valve_open = false;
 String flow_rate_cc_per_sec = "0.0";
@@ -448,13 +459,15 @@ void film_sensor(){
   
 }
 
-//int addresses = 
-
 
 void add_data(String to_add){
   data += ",";
   data += to_add;
 }
+
+//void smoothing(double total, double readings[], double average){
+//  total = total - readings[readIndex];
+//}
 
 void setup() {
   Serial.begin(9600);        //Enable serial at high speed 
@@ -504,6 +517,7 @@ void setup() {
     readings_load1[x] = 0.0;
     readings_load2[x] = 0.0;
   }
+  //digitalWrite(solenoidValvePin,HIGH);
 
 }
 
@@ -515,10 +529,9 @@ void loop() {
   flow_rate_sensor();
   film_sensor();
 
-  
-  if (millis() - last_print_time >= PRINT_DELAY){
-      //Serial.println("yoy");
 
+  if (millis() - last_print_time >= PRINT_DELAY){
+    
     rpm_calculation();
     flow_rate();
     shaft_temp();
@@ -539,8 +552,6 @@ void loop() {
     add_data(position2_mm);
     
     receive_FFT();
-    //mySerial.print("RRRRR");
-    //Serial.println(water_level_cm);
     Serial.println(data);
     Serial.println("M" + data_mic);
     Serial.println("X" + data_x);
