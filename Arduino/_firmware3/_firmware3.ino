@@ -33,7 +33,7 @@
 String NODE_ID = "1";
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            1. SERIAL MONITOR
-unsigned int long PRINT_DELAY = 2000;
+unsigned int long PRINT_DELAY = 10000;
 unsigned int long last_print_time = 0;
 String data;
 
