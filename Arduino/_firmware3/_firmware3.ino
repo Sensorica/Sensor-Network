@@ -42,16 +42,16 @@ String data;
 
 int positionSignal1 = A0; //J9 Connector
 int positionSignal2= A1;  //J10 Connector
-double position1 = 0;
-double position2 = 0;
+double position1 = 0.0;
+double position2 = 0.0;
 double position1_mm = 0.0;
 double position2_mm = 0.0;
 
 void position_sensors(){
   position1 = analogRead(positionSignal1);
   position2 = analogRead(positionSignal2);
-  position1_mm = position1 * 12.7 / 1023;
-  position2_mm = position2 * 12.7 / 1023;
+  position1_mm = position1 * 12.7 / 1023.0;
+  position2_mm = position2 * 12.7 / 1023.0;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -64,19 +64,19 @@ int index_water=0;
 //X is the water depth in cm
 //A is the calibration slope in levels / cm
 //B is the reference level
-double A_water_rate = 5; // difference in bits per cm
-double B_water_reference_level = 323;
+double A_water_rate = 5.0; // difference in bits per cm
+double B_water_reference_level = 323.0;
 double vesicle_diameter_cm = 11.43;//4.5 inch x 2.54 cm / inch
-double vesicle_area_cm_2 = (3.14159) * (vesicle_diameter_cm / 2) * (vesicle_diameter_cm / 2);
+double vesicle_area_cm_2 = (3.14159) * (vesicle_diameter_cm / 2.0) * (vesicle_diameter_cm / 2.0);
 
 //Initialize variables
 boolean initialize = true;
 int analog_water_level = 0;
 const int water_level_sample_window = 30;
 double water_level_samples[water_level_sample_window];
-double water_level_total = 0;
-double water_level_cm = 0;
-double flow_calc_water_level_cm = 0;
+double water_level_total = 0.0;
+double water_level_cm = 0.0;
+double flow_calc_water_level_cm = 0.0;
 unsigned long calc_time_ms = 0;
 
 void fluid_level_sensor(){
@@ -164,7 +164,7 @@ void solenoid_drain_valve(){
 const byte TACH = 2;
 double duration = 1;
 volatile boolean revolution_occured = false;   
-double revolution_count = 0;
+double revolution_count = 0.0;
 unsigned int current_time = 0;
 unsigned int previous_time = 0;
 double rpm = 0.0;
@@ -187,8 +187,8 @@ void rpm_calculation(){
   detachInterrupt(0);
   detachInterrupt(1);
   duration = millis() - last_print_time;
-  rpm = revolution_count / (duration/1000) * 60;
-  revolution_count = 0;
+  rpm = revolution_count / (duration/1000.0) * 60.0;
+  revolution_count = 0.0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////// 
@@ -208,7 +208,7 @@ volatile uint32_t lastflowratetimer = 0;
 // and use that to calculate a flow rate
 double flowrate = 0.0;
 // Interrupt is called once a millisecond, looks for any pulses from the sensor!
-float liters = 0;
+float liters = 0.0;
 bool flowTrigger = false;
 
 
@@ -241,8 +241,8 @@ void flow_rate_sensor(){
 
 void flow_rate(){
   //  flow rate code
-  flowrate = (pulses - last_pulses) / (duration/1000) ; //Hz
-  flowrate = (flowrate + 3)/8.1; // L/min
+  flowrate = (pulses - last_pulses) / (duration/1000.0) ; //Hz
+  flowrate = (flowrate + 3.0)/8.1; // L/min
   last_pulses = pulses;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -528,19 +528,7 @@ void setup() {
 
 double* sensors_list[] = {&shaftTemp, &ambient_temperature, &casing_temperature, &gland_temperature,
 &rpm, &load1_res2, &load2_res2, &flow_rate_cc_per_sec, &flowrate, &position1_mm, &position2_mm};
-/* 1. NodeID
- * 2. shaftTemp
- * 3. ambient_temperature
- * 4. casing_temperature
- * 5. gland_temperature
- * 6. rpm
- * 7. load1_res2
- * 8. load2_res2
- * 9. flow_rate_cc_per_sec
- * 10.flowrate
- * 11. posistion1_mm
- * 12. position2_MM
- * */
+
 int i;
 void loop() {
   position_sensors();
@@ -565,7 +553,19 @@ void loop() {
     for(i=0; i<11; i++){
         add_data_doubles(sensors_list[i]);
     }
-    
+      /* 1. NodeID
+   * 2. shaftTemp
+   * 3. ambient_temperature
+   * 4. casing_temperature
+   * 5. gland_temperature
+   * 6. rpm
+   * 7. load1_res2
+   * 8. load2_res2
+   * 9. flow_rate_cc_per_sec
+   * 10.flowrate
+   * 11. posistion1_mm
+   * 12. position2_MM
+   * */
     receive_FFT();
     Serial.println(data);
     Serial.println("M" + data_mic);
