@@ -44,14 +44,14 @@ int positionSignal1 = A0; //J9 Connector
 int positionSignal2= A1;  //J10 Connector
 double position1 = 0;
 double position2 = 0;
-String position1_mm = "0.0";
-String position2_mm = "0.0";
+double position1_mm = 0.0;
+double position2_mm = 0.0;
 
 void position_sensors(){
   position1 = analogRead(positionSignal1);
   position2 = analogRead(positionSignal2);
-  position1_mm = String(position1 * 12.7 / 1023);
-  position2_mm = String(position2 * 12.7 / 1023);
+  position1_mm = position1 * 12.7 / 1023;
+  position2_mm = position2 * 12.7 / 1023;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -123,7 +123,7 @@ int drain_at_cm_level = 15; //5 inches
 int close_valve_at_cm_level = 5; //2 inches
 
 boolean solenoid_valve_open = false;
-String flow_rate_cc_per_sec = "0.0";
+double flow_rate_cc_per_sec = 0.0;
 float water_level_buffer=1; //The water level buffer is how much the water level should increase before calculating a new flow rate
 
 void solenoid_drain_valve(){
@@ -143,7 +143,7 @@ void solenoid_drain_valve(){
      double time_delta = millis() - calc_time_ms;
      //Serial.println(water_level_delta);
     // Serial.println(time_delta/1000);
-     flow_rate_cc_per_sec = String(( water_level_delta ) / (time_delta/1000));
+     flow_rate_cc_per_sec = ( water_level_delta ) / (time_delta/1000.0);
   
      //set the last calculation references
      flow_calc_water_level_cm = water_level_cm;
@@ -167,7 +167,7 @@ volatile boolean revolution_occured = false;
 double revolution_count = 0;
 unsigned int current_time = 0;
 unsigned int previous_time = 0;
-String rpm = "0.0";
+double rpm = 0.0;
 
 // Tachometer Interrupt Service Routine (ISR)
 
@@ -187,7 +187,7 @@ void rpm_calculation(){
   detachInterrupt(0);
   detachInterrupt(1);
   duration = millis() - last_print_time;
-  rpm = String(revolution_count / (duration/1000) * 60);
+  rpm = revolution_count / (duration/1000) * 60;
   revolution_count = 0;
 }
 
@@ -206,12 +206,12 @@ volatile uint8_t lastflowpinstate;
 // you can try to keep time of how long it is between pulses
 volatile uint32_t lastflowratetimer = 0;
 // and use that to calculate a flow rate
-volatile float flowrate;
+double flowrate = 0.0;
 // Interrupt is called once a millisecond, looks for any pulses from the sensor!
 float liters = 0;
 bool flowTrigger = false;
 
-String flowrate_str = "0.0";
+
 
 void flowCalc(){
   flowTrigger = true;
@@ -243,7 +243,6 @@ void flow_rate(){
   //  flow rate code
   flowrate = (pulses - last_pulses) / (duration/1000) ; //Hz
   flowrate = (flowrate + 3)/8.1; // L/min
-  flowrate_str = String(flowrate);
   last_pulses = pulses;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -256,7 +255,7 @@ void flow_rate(){
 #define  DataPin   7  //data in  
 #define  TestPin   8  //driver pin  set pin low to start deliver data
 
-String shaftTemp = "";
+double shaftTemp = 0.0;
 
 void data_read(int *p)
 {
@@ -294,7 +293,7 @@ void shaft_temp(){
     int tempData = 0;
     data_read(data_buf);
     tempData = data_buf[1]*256 + data_buf[2];
-    shaftTemp = String((float)tempData/16-273.15);
+    shaftTemp = (float)tempData/16-273.15;
 }
 
 
@@ -314,17 +313,17 @@ DallasTemperature sensors(&oneWire);                  // Pass our oneWire refere
 DeviceAddress casingTemperature, ambientTemperature, glandTemperature;   // OneWire variables
 unsigned long lastTempRequest = 0;
 int  delayInMillis = 0;
-String ambient_temperature = "";
-String casing_temperature = "";
-String gland_temperature = "";
+double ambient_temperature = 0.0;
+double casing_temperature = 0.0;
+double gland_temperature = 0.0;
 int  idle = 0;
 
 void one_wire_temps(){
   // OneWire sensor setup
       // waited long enough??
-    ambient_temperature = String(sensors.getTempCByIndex(0));
-    casing_temperature = String(sensors.getTempCByIndex(1));
-    gland_temperature = String(sensors.getTempCByIndex (2));
+    ambient_temperature = sensors.getTempCByIndex(0);
+    casing_temperature = sensors.getTempCByIndex(1);
+    gland_temperature = sensors.getTempCByIndex (2);
     sensors.requestTemperatures(); 
     delayInMillis = 750 / (1 << (3));
     lastTempRequest = millis(); 
@@ -404,8 +403,8 @@ float load2 = 0.0;
 float load1_val = 0.0;
 float load2_val = 0.0;
 float load_cap = 10000000.0;
-String load1_res2 = "0.0";
-String load2_res2 = "0.0";
+double load1_res2 = 0.0;
+double load2_res2 = 0.0;
 
 const int numRead = 10;
 float readings_load1[numRead];
@@ -454,8 +453,8 @@ void film_sensor(){
   ave_load2 = total_load2 / float(numRead);
   //Smoothing code ends
   
-  load1_res2 = String(ave_load1);
-  load2_res2 = String(ave_load2);
+  load1_res2 = ave_load1;
+  load2_res2 = ave_load2;
   
 }
 
@@ -463,6 +462,12 @@ void film_sensor(){
 void add_data(String to_add){
   data += ",";
   data += to_add;
+}
+
+void add_data_doubles(double* address_1){
+    data += ",";
+    data += *address_1;
+
 }
 
 //void smoothing(double total, double readings[], double average){
@@ -521,6 +526,22 @@ void setup() {
 
 }
 
+double* sensors_list[] = {&shaftTemp, &ambient_temperature, &casing_temperature, &gland_temperature,
+&rpm, &load1_res2, &load2_res2, &flow_rate_cc_per_sec, &flowrate, &position1_mm, &position2_mm};
+/* 1. NodeID
+ * 2. shaftTemp
+ * 3. ambient_temperature
+ * 4. casing_temperature
+ * 5. gland_temperature
+ * 6. rpm
+ * 7. load1_res2
+ * 8. load2_res2
+ * 9. flow_rate_cc_per_sec
+ * 10.flowrate
+ * 11. posistion1_mm
+ * 12. position2_MM
+ * */
+int i;
 void loop() {
   position_sensors();
   fluid_level_sensor();
@@ -530,8 +551,10 @@ void loop() {
   film_sensor();
 
 
+
   if (millis() - last_print_time >= PRINT_DELAY){
-    
+
+
     rpm_calculation();
     flow_rate();
     shaft_temp();
@@ -539,17 +562,9 @@ void loop() {
 
     data = "D";
     add_data(NODE_ID);
-    add_data(shaftTemp);
-    add_data(ambient_temperature);
-    add_data(casing_temperature);
-    add_data(gland_temperature);
-    add_data(rpm);
-    add_data(load1_res2);
-    add_data(load2_res2);
-    add_data(flow_rate_cc_per_sec);
-    add_data(flowrate_str);
-    add_data(position1_mm);
-    add_data(position2_mm);
+    for(i=0; i<11; i++){
+        add_data_doubles(sensors_list[i]);
+    }
     
     receive_FFT();
     Serial.println(data);
