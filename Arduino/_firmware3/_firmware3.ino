@@ -143,7 +143,7 @@ void solenoid_drain_valve(){
      double time_delta = millis() - calc_time_ms;
      //Serial.println(water_level_delta);
     // Serial.println(time_delta/1000);
-     flow_rate_cc_per_sec = ( water_level_delta ) / (time_delta/1000);
+     flow_rate_cc_per_sec = ( water_level_delta ) / (time_delta/1000.0);
   
      //set the last calculation references
      flow_calc_water_level_cm = water_level_cm;
@@ -528,8 +528,20 @@ void setup() {
 
 double* sensors_list[] = {&shaftTemp, &ambient_temperature, &casing_temperature, &gland_temperature,
 &rpm, &load1_res2, &load2_res2, &flow_rate_cc_per_sec, &flowrate, &position1_mm, &position2_mm};
-
-
+/* 1. NodeID
+ * 2. shaftTemp
+ * 3. ambient_temperature
+ * 4. casing_temperature
+ * 5. gland_temperature
+ * 6. rpm
+ * 7. load1_res2
+ * 8. load2_res2
+ * 9. flow_rate_cc_per_sec
+ * 10.flowrate
+ * 11. posistion1_mm
+ * 12. position2_MM
+ * */
+int i;
 void loop() {
   position_sensors();
   fluid_level_sensor();
@@ -539,7 +551,7 @@ void loop() {
   film_sensor();
 
 
-    int i;
+
   if (millis() - last_print_time >= PRINT_DELAY){
 
 
