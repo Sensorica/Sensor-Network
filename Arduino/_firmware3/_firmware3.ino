@@ -289,11 +289,24 @@ void data_read(int *p)
 }
 
 void shaft_temp(){
+    int i;
+    unsigned long time_check=millis();
+
     int data_buf[5] = {0};
     int tempData = 0;
-    data_read(data_buf);
+    do
+    {
+      data_read(data_buf);
+      delay(1);
+      if ((millis() - time_check) >= 2000){//Haha, let's NOT get stuck if the thing is unplugged
+        break;
+        }
+
+    }while(((data_buf[0] + data_buf[1] + data_buf[2])& 0xff) != data_buf[3]);
+
     tempData = data_buf[1]*256 + data_buf[2];
     shaftTemp = (float)tempData/16-273.15;
+
 }
 
 
