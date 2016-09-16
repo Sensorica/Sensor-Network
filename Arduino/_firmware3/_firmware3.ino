@@ -91,6 +91,7 @@ void fluid_level_sensor(){
  
   if (index_water == water_level_sample_window) index_water = 0;
   water_level_cm = water_level_total / water_level_sample_window;
+  //Serial.println(water_level_cm);
 
   //Serial.println(analog_water_level);
   //Serial.println(water_level_cm);
@@ -266,6 +267,11 @@ void data_read(int *p)
     for(j=0;j<8;j++){                      //read 8 bits
       do{
         PinState = digitalRead(ClockPin);
+        if ((millis() - time_check) >= 2000){//Haha, let's NOT get stuck if the thing is unplugged
+          Serial.println("ir_cl_sync_error");
+          break;
+        }
+        //Serial.println("hh");
         
       } while(PinState);                   //sync to clock by waiting for change to LOW 
       delayMicroseconds(100); //buffer
@@ -278,7 +284,7 @@ void data_read(int *p)
         PinState = digitalRead(ClockPin);  //get stuck until clock changes
         
         if ((millis() - time_check) >= 2000){//Haha, let's NOT get stuck if the thing is unplugged
-//          Serial.println("break at 20ms");
+          Serial.println("ir_cl_sync_error");
           break;
         }
       }while(PinState != 1);
@@ -299,6 +305,7 @@ void shaft_temp(){
       data_read(data_buf);
       delay(1);
       if ((millis() - time_check) >= 2000){//Haha, let's NOT get stuck if the thing is unplugged
+        Serial.println("checksum_error");
         break;
         }
 
@@ -471,6 +478,13 @@ void film_sensor(){
   
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//                                            11. Current sensor
+#include "EmonLib.h"                   // Include Emon Library
+EnergyMonitor emon1;                   // Create an instance
+double Irms = 0.0;
+
+
 
 void add_data(String to_add){
   data += ",";
@@ -537,10 +551,14 @@ void setup() {
   }
   //digitalWrite(solenoidValvePin,HIGH);
 
+
+  emon1.current(3, 111.1);             // Current: input pin, calibration.
+
 }
 
 double* sensors_list[] = {&shaftTemp, &ambient_temperature, &casing_temperature, &gland_temperature,
-&rpm, &load1_res2, &load2_res2, &flow_rate_cc_per_sec, &flowrate, &position1_mm, &position2_mm};
+&rpm, &load1_res2, &load2_res2, &flow_rate_cc_per_sec, &flowrate, &position1_mm, &position2_mm, &Irms};
+
 
 int i;
 void loop() {
@@ -551,19 +569,19 @@ void loop() {
   flow_rate_sensor();
   film_sensor();
 
-
-
+  //Irms = emon1.calcIrms(1480);  // Calculate Irms only
+  
   if (millis() - last_print_time >= PRINT_DELAY){
 
 
     rpm_calculation();
     flow_rate();
-    shaft_temp();
+    //shaft_temp();
     one_wire_temps();
 
     data = "D";
     add_data(NODE_ID);
-    for(i=0; i<11; i++){
+    for(i=0; i<12; i++){
         add_data_doubles(sensors_list[i]);
     }
       /* 1. NodeID
