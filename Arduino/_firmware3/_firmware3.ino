@@ -29,6 +29,21 @@
 //+5 Film sensor
 //+3.3V Fluid Leve
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                            Analog smoothing
+const int number_of_readings = 40;
+int analog_index = 0;
+
+float smoothing(const int* numb_readings, float* total_sum,
+  float* array_item, int* analog_pin){
+
+  *total_sum -= *array_item;
+  *array_item = analogRead(*analog_pin);
+  *total_sum += *array_item;
+  float result = *total_sum / *numb_readings;
+  return result;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            0. NODE ID
 String NODE_ID = "1";
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,71 +55,66 @@ String data;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            2. POSITION SENSORs
 
-int positionSignal1 = A0; //J9 Connector
-int positionSignal2= A1;  //J10 Connector
-double position1 = 0.0;
-double position2 = 0.0;
-double position1_mm = 0.0;
-double position2_mm = 0.0;
+int position1_pin = A0; //J9 Connector
+int position2_pin= A1;  //J10 Connector
+float position1_average = 0.0;
+float position2_average = 0.0;
+float position1_array[number_of_readings];
+float position2_array[number_of_readings];
+float position1_total = 0.0;
+float position2_total = 0.0;
+float position1_mm = 0.0;
+float position2_mm = 0.0;
+
 
 void position_sensors(){
-  position1 = analogRead(positionSignal1);
-  position2 = analogRead(positionSignal2);
-  position1_mm = position1 * 12.7 / 1023.0;
-  position2_mm = position2 * 12.7 / 1023.0;
+  // ADD AUTO VCC function!!!!
+  // Accodingly to datasheet function!!!
+  // add circuitry??
+  position1_average = smoothing(&number_of_readings, &position1_total,
+                                &position1_array[analog_index], &position1_pin);
+
+  position2_average = smoothing(&number_of_readings, &position2_total,
+                                &position2_array[analog_index], &position2_pin);
+
+
+  position1_mm = position1_average * 12.7 / 1023.0;
+  position2_mm = position2_average * 12.7 / 1023.0;
+
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            3. FLUID LEVEL SENSOR
-int levelSensorPin = A3;  //J6 Connector
+int fluidLevel_pin = A3;  //J6 Connector
 
-int index_water=0;
 
 //Insert Calibration Data Here: Level = AX + B format (rounded to the nearest integer N)
 //X is the water depth in cm
 //A is the calibration slope in levels / cm
 //B is the reference level
-double A_water_rate = 5.0; // difference in bits per cm
-double B_water_reference_level = 323.0;
-double vesicle_diameter_cm = 11.43;//4.5 inch x 2.54 cm / inch
-double vesicle_area_cm_2 = (3.14159) * (vesicle_diameter_cm / 2.0) * (vesicle_diameter_cm / 2.0);
+float A_water_rate = 4.5; // difference in bits per cm
+float B_water_reference_level = 328.0;
+float vesicle_diameter_cm = 11.43;//4.5 inch x 2.54 cm / inch
+float vesicle_area_cm_2 = (3.14159) * (vesicle_diameter_cm / 2.0) * (vesicle_diameter_cm / 2.0);
 
 //Initialize variables
 boolean initialize = true;
-int analog_water_level = 0;
-const int water_level_sample_window = 30;
-double water_level_samples[water_level_sample_window];
-double water_level_total = 0.0;
-double water_level_cm = 0.0;
-double flow_calc_water_level_cm = 0.0;
+
+float fluidLevel_average = 0;
+float fluidLevel_array[number_of_readings];
+float fluidLevel_total = 0.0;
+
+float water_level_cm = 0.0;
+float flow_calc_water_level_cm = 0.0;
 unsigned long calc_time_ms = 0;
 
 void fluid_level_sensor(){
 
-  water_level_total -= water_level_samples[index_water];
+  fluidLevel_average = smoothing(&number_of_readings, &fluidLevel_total,
+                                  &fluidLevel_array[analog_index], &fluidLevel_pin);
 
-  analog_water_level = analogRead(levelSensorPin);
-  //Serial.println(analog_water_level);
-  water_level_samples[index_water] = ( analog_water_level - B_water_reference_level ) / A_water_rate;
-  water_level_total += water_level_samples[index_water];
-  index_water++;
- 
-  if (index_water == water_level_sample_window) index_water = 0;
-  water_level_cm = water_level_total / water_level_sample_window;
-  //Serial.println(water_level_cm);
-
-  //Serial.println(analog_water_level);
-  //Serial.println(water_level_cm);
-
-
-////take the average over the window
-//if(index_water==0){
-//for (int i = 0 ; i< water_level_sample_window; i++){
-//  water_level_cm+= water_level_samples[index_water];
-//  }
-// water_level_cm = water_level_cm / water_level_sample_window;
-////}
-// index_water = index_water%water_level_sample_window;
+  water_level_cm = (fluidLevel_average - B_water_reference_level) / A_water_rate;
+  
 
 ////Set the reference water level for a calculation (when appropriate)
   if(initialize==true){
@@ -124,7 +134,7 @@ int drain_at_cm_level = 15; //5 inches
 int close_valve_at_cm_level = 5; //2 inches
 
 boolean solenoid_valve_open = false;
-double flow_rate_cc_per_sec = 0.0;
+float flow_rate_cc_per_sec = 0.0;
 float water_level_buffer=1; //The water level buffer is how much the water level should increase before calculating a new flow rate
 
 void solenoid_drain_valve(){
@@ -140,8 +150,8 @@ void solenoid_drain_valve(){
    if (solenoid_valve_open == false){ 
     if (water_level_cm >= (flow_calc_water_level_cm + water_level_buffer)){
       //Serial.println("CALCULATION TRIGGERED!");
-     double water_level_delta = water_level_cm - flow_calc_water_level_cm;
-     double time_delta = millis() - calc_time_ms;
+     float water_level_delta = water_level_cm - flow_calc_water_level_cm;
+     float time_delta = millis() - calc_time_ms;
      //Serial.println(water_level_delta);
     // Serial.println(time_delta/1000);
      flow_rate_cc_per_sec = ( water_level_delta ) / (time_delta/1000.0);
@@ -163,12 +173,12 @@ void solenoid_drain_valve(){
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                  5. TACHOMETER
 const byte TACH = 2;
-double duration = 1;
+float duration = 1;
 volatile boolean revolution_occured = false;   
-double revolution_count = 0.0;
+float revolution_count = 0.0;
 unsigned int current_time = 0;
 unsigned int previous_time = 0;
-double rpm = 0.0;
+float rpm = 0.0;
 
 // Tachometer Interrupt Service Routine (ISR)
 
@@ -207,7 +217,7 @@ volatile uint8_t lastflowpinstate;
 // you can try to keep time of how long it is between pulses
 volatile uint32_t lastflowratetimer = 0;
 // and use that to calculate a flow rate
-double flowrate = 0.0;
+float flowrate = 0.0;
 // Interrupt is called once a millisecond, looks for any pulses from the sensor!
 float liters = 0.0;
 bool flowTrigger = false;
@@ -256,7 +266,7 @@ void flow_rate(){
 #define  DataPin   7  //data in  
 #define  TestPin   8  //driver pin  set pin low to start deliver data
 
-double shaftTemp = 0.0;
+float shaftTemp = 0.0;
 
 void data_read(int *p)
 {
@@ -333,9 +343,9 @@ DallasTemperature sensors(&oneWire);                  // Pass our oneWire refere
 DeviceAddress casingTemperature, ambientTemperature, glandTemperature;   // OneWire variables
 unsigned long lastTempRequest = 0;
 int  delayInMillis = 0;
-double ambient_temperature = 0.0;
-double casing_temperature = 0.0;
-double gland_temperature = 0.0;
+float ambient_temperature = 0.0;
+float casing_temperature = 0.0;
+float gland_temperature = 0.0;
 int  idle = 0;
 
 void one_wire_temps(){
@@ -409,72 +419,51 @@ void receive_FFT(){
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            10. LOAD FILM SENSOR
+
+int load1_pin = A4;
+int load2_pin = A5;
+float load1_average = 0.0;
+float load2_average = 0.0;
+float load1_array[number_of_readings];
+float load2_array[number_of_readings];
+float load1_total = 0.0;
+float load2_total = 0.0;
+
 float v_in = 5.04;// Measure and correct the V in.
 float load1_v_out = 0.0;
 float load2_v_out = 0.0;
 float res_1 = 50350.0; // Measure the value of R1 in voltage divider circuit.
 float res_2 = 0.0;
 
-const int loadSignal1 = A4;
-const int loadSignal2 = A5;
-
-float load1 = 0.0;
-float load2 = 0.0;
-float load1_val = 0.0;
-float load2_val = 0.0;
 float load_cap = 10000000.0;
-double load1_res2 = 0.0;
-double load2_res2 = 0.0;
-
-const int numRead = 10;
-float readings_load1[numRead];
-float readings_load2[numRead];
-int load_read_index = 0;
-float total_load1 = 0.0;
-float total_load2 = 0.0;
-float ave_load1 = 0.0;
-float ave_load2 = 0.0;
+float load1_res2 = 0.0;
+float load2_res2 = 0.0;
 
 
 
 void film_sensor(){
-  //Read analog signal
-  load1 = float(analogRead(loadSignal1));
-  load2 = float(analogRead(loadSignal2));
+
+  load1_average = smoothing(&number_of_readings, &load1_total,
+                            &load1_array[analog_index], &load1_pin);
+  load2_average = smoothing(&number_of_readings, &load2_total,
+                            &load2_array[analog_index], &load2_pin);
+
   //Convert analog signal to voltage
-  load1_v_out = load1 / 1023 * v_in;
-  load2_v_out = load2 / 1023 * v_in;
+  load1_v_out = load1_average / 1023 * v_in;
+  load2_v_out = load2_average / 1023 * v_in;
+
   //Calculate the resistance value of the film sensor
-  load1_val = res_1 / (v_in / load1_v_out - 1.0);
-  load2_val = res_1 / (v_in / load2_v_out - 1.0);
+  load1_res2 = res_1 / (v_in / load1_v_out - 1.0);
+  load2_res2 = res_1 / (v_in / load2_v_out - 1.0);
+
   //If value is higher than the cap, it sets to the cap value, because the value can reach INF
-  if(load1_val > load_cap){
-    load1_val = 10000000.0;
+  if(load1_res2 > load_cap){
+    load1_res2 = 10000000.0;
   }
-  if(load2_val > load_cap){
-    load2_val = 10000000.0;
+  if(load2_res2 > load_cap){
+    load2_res2 = 10000000.0;
   }
 
-  /// Smoothing code starts
-  total_load1 -= readings_load1[load_read_index];
-  total_load2 -= readings_load2[load_read_index];
-
-  readings_load1[load_read_index] = load1_val;
-  readings_load2[load_read_index] = load2_val;
-
-  total_load1 += readings_load1[load_read_index];
-  total_load2 += readings_load2[load_read_index];
-
-  load_read_index += 1;
-
-  if (load_read_index >= numRead) load_read_index = 0;
-
-  ave_load1 = total_load1 / float(numRead);
-  ave_load2 = total_load2 / float(numRead);
-  //Smoothing code ends
-  
-  load1_res2 = ave_load1;
-  load2_res2 = ave_load2;
   
 }
 
@@ -482,24 +471,22 @@ void film_sensor(){
 //                                            11. Current sensor
 #include "EmonLib.h"                   // Include Emon Library
 EnergyMonitor emon1;                   // Create an instance
-double Irms = 0.0;
+float Irms = 0.0;
 
-
+////////////////////////////////////////////END of Sensors
 
 void add_data(String to_add){
   data += ",";
   data += to_add;
 }
 
-void add_data_doubles(double* address_1){
+void add_data_floats(float* address_1){
     data += ",";
     data += *address_1;
 
 }
 
-//void smoothing(double total, double readings[], double average){
-//  total = total - readings[readIndex];
-//}
+
 
 void setup() {
   Serial.begin(9600);        //Enable serial at high speed 
@@ -515,10 +502,15 @@ void setup() {
   pinMode(TestPin,OUTPUT);
   digitalWrite(TestPin, HIGH);
   
-  //Initialize the water level samples array
-  for (int i = 0; i<water_level_sample_window; i++){
-    water_level_samples[i]=0;
+  //Initialize the fuild level, load film & position samples arrays
+  for (int i = 0; i<number_of_readings; i++){
+    fluidLevel_array[i] = 0;
+    position1_array[i] = 0;
+    position2_array[i] = 0;
+    load1_array[i] = 0;
+    load2_array[i] = 0;
   }
+
 
   // Tachometer setup
   pinMode(solenoidValvePin,OUTPUT);\
@@ -544,45 +536,59 @@ void setup() {
    digitalWrite(FLOWSENSORPIN, HIGH);
    lastflowpinstate = digitalRead(FLOWSENSORPIN);
 //   useInterrupt(true);
-//////////////////////////////////////////Initialise load film array
-  for(int x = 0; x < numRead; x++){
-    readings_load1[x] = 0.0;
-    readings_load2[x] = 0.0;
-  }
-  //digitalWrite(solenoidValvePin,HIGH);
 
-
-  emon1.current(3, 111.1);             // Current: input pin, calibration.
+  emon1.current(A2, 30);             // Current: input pin, calibration.
 
 }
 
-double* sensors_list[] = {&shaftTemp, &ambient_temperature, &casing_temperature, &gland_temperature,
+float* sensors_list[] = {&shaftTemp, &ambient_temperature, &casing_temperature, &gland_temperature,
 &rpm, &load1_res2, &load2_res2, &flow_rate_cc_per_sec, &flowrate, &position1_mm, &position2_mm, &Irms};
 
 
 int i;
 void loop() {
+  /////////////////////////////////////////////////////////////////
+  //                            Analog readings
   position_sensors();
   fluid_level_sensor();
+  film_sensor();
+
+  analog_index++;
+  if (analog_index == number_of_readings) analog_index = 0;
+  ////////////////////////////////////////////////////////////////
+
   solenoid_drain_valve();
   tachometer_sensor();
   flow_rate_sensor();
-  film_sensor();
 
-  //Irms = emon1.calcIrms(1480);  // Calculate Irms only
+
+  // Serial.print(analogRead(A0));
+  // Serial.print("\t");
+  // Serial.print(analogRead(A1));
+  // Serial.print("\t");
+  // Serial.print(analogRead(A2));
+  // Serial.print("\t");
+  // Serial.print(analogRead(A3));
+  // Serial.print("\t");
+  // Serial.print(analogRead(A4));
+  // Serial.print("\t");
+  // Serial.println(analogRead(A5));
+  
+  //Serial.println(emon1.readVcc());
   
   if (millis() - last_print_time >= PRINT_DELAY){
-
 
     rpm_calculation();
     flow_rate();
     //shaft_temp();
     one_wire_temps();
+    Irms = emon1.calcIrms(1480);  // Calculate Irms only
+
 
     data = "D";
     add_data(NODE_ID);
     for(i=0; i<12; i++){
-        add_data_doubles(sensors_list[i]);
+        add_data_floats(sensors_list[i]);
     }
       /* 1. NodeID
    * 2. shaftTemp
