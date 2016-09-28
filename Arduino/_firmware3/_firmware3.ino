@@ -77,6 +77,12 @@ void position_sensors(){
   position2_average = smoothing(&number_of_readings, &position2_total,
                                 &position2_array[analog_index], &position2_pin);
 
+  //////////////////// For debugging
+  // Serial.println(analogRead(position1_pin));
+  // Serial.println(analogRead(position2_pin));
+  // Serial.println(position1_average);
+  // Serial.println(position2_average);
+
 
   position1_mm = position1_average * 12.7 / 1023.0;
   position2_mm = position2_average * 12.7 / 1023.0;
@@ -114,7 +120,11 @@ void fluid_level_sensor(){
                                   &fluidLevel_array[analog_index], &fluidLevel_pin);
 
   water_level_cm = (fluidLevel_average - B_water_reference_level) / A_water_rate;
-  
+
+  //////////////////// For debugging
+  // Serial.println(analogRead(fluidLevel_pin));
+  // Serial.println(fluidLevel_average);
+  // Serial.println(water_level_cm);
 
 ////Set the reference water level for a calculation (when appropriate)
   if(initialize==true){
@@ -448,6 +458,12 @@ void film_sensor(){
   load2_average = smoothing(&number_of_readings, &load2_total,
                             &load2_array[analog_index], &load2_pin);
 
+  //////////////////// For debugging
+  // Serial.println(analogRead(load1_pin));
+  // Serial.println(analogRead(load2_pin));
+  // Serial.println(load2_average);
+  // Serial.println(load2_average);
+
   //Convert analog signal to voltage
   load1_v_out = load1_average / 1023 * v_in;
   load2_v_out = load2_average / 1023 * v_in;
@@ -561,19 +577,6 @@ void loop() {
   tachometer_sensor();
   flow_rate_sensor();
 
-
-  // Serial.print(analogRead(A0));
-  // Serial.print("\t");
-  // Serial.print(analogRead(A1));
-  // Serial.print("\t");
-  // Serial.print(analogRead(A2));
-  // Serial.print("\t");
-  // Serial.print(analogRead(A3));
-  // Serial.print("\t");
-  // Serial.print(analogRead(A4));
-  // Serial.print("\t");
-  // Serial.println(analogRead(A5));
-  
   //Serial.println(emon1.readVcc());
   
   if (millis() - last_print_time >= PRINT_DELAY){
@@ -601,7 +604,7 @@ void loop() {
    * 9. flow_rate_cc_per_sec
    * 10.flowrate
    * 11. posistion1_mm
-   * 12. position2_MM
+   * 12. position2_mm
    * */
     receive_FFT();
     Serial.println(data);
