@@ -22,7 +22,8 @@
 // 9. Software Serial to FFT
 //10. Node Metadata
 #include <SoftwareSerial.h>
-
+#include "EmonLib.h"                   // Include Emon Library
+EnergyMonitor emon1;                   // Create an instance
 
 //Analog sensors
 //+5V Position Sensor
@@ -30,14 +31,24 @@
 //+3.3V Fluid Leve
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            Analog smoothing
-const int number_of_readings = 40;
+const int number_of_readings = 30; //Increases the size of global variables big time. Can be be managed in case we run into memory issues
 int analog_index = 0;
 
 float smoothing(const int* numb_readings, float* total_sum,
-  float* array_item, int* analog_pin){
+                float* array_item, int* analog_pin){
 
   *total_sum -= *array_item;
   *array_item = analogRead(*analog_pin);
+  *total_sum += *array_item;
+  float result = *total_sum / *numb_readings;
+  return result;
+}
+
+float smoothing_Vin(const int* numb_readings, float* total_sum,
+                float* array_item){
+
+  *total_sum -= *array_item;
+  *array_item = emon1.readVcc()*0.001;
   *total_sum += *array_item;
   float result = *total_sum / *numb_readings;
   return result;
@@ -440,6 +451,9 @@ float load1_total = 0.0;
 float load2_total = 0.0;
 
 float v_in = 5.04;// Measure and correct the V in.
+float v_in_total = 0.0;
+float v_in_array[number_of_readings];
+
 float load1_v_out = 0.0;
 float load2_v_out = 0.0;
 float res_1 = 50350.0; // Measure the value of R1 in voltage divider circuit.
@@ -457,12 +471,13 @@ void film_sensor(){
                             &load1_array[analog_index], &load1_pin);
   load2_average = smoothing(&number_of_readings, &load2_total,
                             &load2_array[analog_index], &load2_pin);
-
+  v_in = smoothing_Vin(&number_of_readings, &v_in_total, &v_in_array[analog_index]);
   //////////////////// For debugging
   // Serial.println(analogRead(load1_pin));
   // Serial.println(analogRead(load2_pin));
   // Serial.println(load2_average);
   // Serial.println(load2_average);
+  //Serial.println(v_in);
 
   //Convert analog signal to voltage
   load1_v_out = load1_average / 1023 * v_in;
@@ -485,8 +500,7 @@ void film_sensor(){
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            11. Current sensor
-#include "EmonLib.h"                   // Include Emon Library
-EnergyMonitor emon1;                   // Create an instance
+
 float Irms = 0.0;
 
 ////////////////////////////////////////////END of Sensors
