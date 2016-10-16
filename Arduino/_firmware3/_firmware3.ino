@@ -31,7 +31,7 @@ EnergyMonitor emon1;                   // Create an instance
 //+3.3V Fluid Leve
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            Analog smoothing
-const int number_of_readings = 30; //Increases the size of global variables big time. Can be be managed in case we run into memory issues
+const int number_of_readings = 25; //Increases the size of global variables big time. Can be be managed in case we run into memory issues
 int analog_index = 0;
 
 float smoothing(const int* numb_readings, float* total_sum,
@@ -167,7 +167,7 @@ void solenoid_drain_valve(){
    }
 
 
-  //Calculate the flow rate
+  //Calculate the flow ratecal
    if (solenoid_valve_open == false){ 
     if (water_level_cm >= (flow_calc_water_level_cm + water_level_buffer)){
       //Serial.println("CALCULATION TRIGGERED!");
@@ -192,6 +192,8 @@ void solenoid_drain_valve(){
       calc_time_ms = millis();
     }
    }
+
+   if (calc_time_ms > millis()) calc_time_ms = millis(); // to Reset the timer variable once millis() timer overflows.
   
     if (solenoid_valve_open == true && water_level_cm <= close_valve_at_cm_level){
     digitalWrite(solenoidValvePin,LOW);
@@ -309,7 +311,7 @@ void data_read(int *p)
       do{
         PinState = digitalRead(ClockPin);
         if ((millis() - time_check) >= 2000){//Haha, let's NOT get stuck if the thing is unplugged
-          Serial.println("ir_cl_sync_error");
+          //Serial.println("ir_cl_sync_error");
           break;
         }
         //Serial.println("hh");
@@ -325,7 +327,7 @@ void data_read(int *p)
         PinState = digitalRead(ClockPin);  //get stuck until clock changes
         
         if ((millis() - time_check) >= 2000){//Haha, let's NOT get stuck if the thing is unplugged
-          Serial.println("ir_cl_sync_error");
+          //Serial.println("ir_cl_sync_error");
           break;
         }
       }while(PinState != 1);
@@ -346,7 +348,7 @@ void shaft_temp(){
       data_read(data_buf);
       delay(1);
       if ((millis() - time_check) >= 2000){//Haha, let's NOT get stuck if the thing is unplugged
-        Serial.println("checksum_error");
+        //Serial.println("checksum_error");
         break;
         }
 
@@ -609,7 +611,7 @@ void loop() {
 
     rpm_calculation();
     flow_rate();
-    //shaft_temp();
+    shaft_temp();
     one_wire_temps();
     Irms = emon1.calcIrms(1480);  // Calculate Irms only
     if (Irms < 2) Irms = 0;//Until library is fixed
