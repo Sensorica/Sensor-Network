@@ -22,7 +22,8 @@
 // 9. Software Serial to FFT
 //10. Node Metadata
 #include <SoftwareSerial.h>
-
+#include "EmonLib.h"                   // Include Emon Library
+EnergyMonitor emon1;                   // Create an instance
 
 //Analog sensors
 //+5V Position Sensor
@@ -30,11 +31,11 @@
 //+3.3V Fluid Leve
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            Analog smoothing
-const int number_of_readings = 40;
+const int number_of_readings = 25; //Increases the size of global variables big time. Can be be managed in case we run into memory issues
 int analog_index = 0;
 
 float smoothing(const int* numb_readings, float* total_sum,
-  float* array_item, int* analog_pin){
+                float* array_item, int* analog_pin){
 
   *total_sum -= *array_item;
   *array_item = analogRead(*analog_pin);
@@ -42,6 +43,16 @@ float smoothing(const int* numb_readings, float* total_sum,
   float result = *total_sum / *numb_readings;
   return result;
 }
+
+// float smoothing_Vin(const int* numb_readings, float* total_sum,
+//                 float* array_item){
+
+//   *total_sum -= *array_item;
+//   *array_item = emon1.readVcc()*0.001;
+//   *total_sum += *array_item;
+//   float result = *total_sum / *numb_readings;
+//   return result;
+// }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            0. NODE ID
@@ -145,7 +156,7 @@ int close_valve_at_cm_level = 5; //2 inches
 
 boolean solenoid_valve_open = false;
 float flow_rate_cc_per_sec = 0.0;
-float water_level_buffer=1; //The water level buffer is how much the water level should increase before calculating a new flow rate
+float water_level_buffer=1.0; //The water level buffer is how much the water level should increase before calculating a new flow rate
 
 void solenoid_drain_valve(){
    //Start the drain if the water level is too high
@@ -156,7 +167,7 @@ void solenoid_drain_valve(){
    }
 
 
-  //Calculate the flow rate
+  //Calculate the flow ratecal
    if (solenoid_valve_open == false){ 
     if (water_level_cm >= (flow_calc_water_level_cm + water_level_buffer)){
       //Serial.println("CALCULATION TRIGGERED!");
@@ -165,12 +176,24 @@ void solenoid_drain_valve(){
      //Serial.println(water_level_delta);
     // Serial.println(time_delta/1000);
      flow_rate_cc_per_sec = ( water_level_delta ) / (time_delta/1000.0);
+     flow_rate_cc_per_sec *= vesicle_area_cm_2;
   
      //set the last calculation references
      flow_calc_water_level_cm = water_level_cm;
      calc_time_ms = millis();
     }
+    else if (600000.0 <= (millis() - calc_time_ms) && water_level_cm >= flow_calc_water_level_cm){
+      float water_level_delta = water_level_cm - flow_calc_water_level_cm;
+      float time_delta = millis() - calc_time_ms;
+      flow_rate_cc_per_sec = ( water_level_delta ) / (time_delta/1000.0);
+      flow_rate_cc_per_sec *= vesicle_area_cm_2;
+      //set the last calculation references
+      flow_calc_water_level_cm = water_level_cm;
+      calc_time_ms = millis();
+    }
    }
+
+   if (calc_time_ms > millis()) calc_time_ms = millis(); // to Reset the timer variable once millis() timer overflows.
   
     if (solenoid_valve_open == true && water_level_cm <= close_valve_at_cm_level){
     digitalWrite(solenoidValvePin,LOW);
@@ -288,7 +311,7 @@ void data_read(int *p)
       do{
         PinState = digitalRead(ClockPin);
         if ((millis() - time_check) >= 2000){//Haha, let's NOT get stuck if the thing is unplugged
-          Serial.println("ir_cl_sync_error");
+          //Serial.println("ir_cl_sync_error");
           break;
         }
         //Serial.println("hh");
@@ -304,7 +327,7 @@ void data_read(int *p)
         PinState = digitalRead(ClockPin);  //get stuck until clock changes
         
         if ((millis() - time_check) >= 2000){//Haha, let's NOT get stuck if the thing is unplugged
-          Serial.println("ir_cl_sync_error");
+          //Serial.println("ir_cl_sync_error");
           break;
         }
       }while(PinState != 1);
@@ -325,7 +348,7 @@ void shaft_temp(){
       data_read(data_buf);
       delay(1);
       if ((millis() - time_check) >= 2000){//Haha, let's NOT get stuck if the thing is unplugged
-        Serial.println("checksum_error");
+        //Serial.println("checksum_error");
         break;
         }
 
@@ -440,9 +463,13 @@ float load1_total = 0.0;
 float load2_total = 0.0;
 
 float v_in = 5.04;// Measure and correct the V in.
+float v_in_total = 0.0;
+float v_in_array[number_of_readings];
+
 float load1_v_out = 0.0;
 float load2_v_out = 0.0;
-float res_1 = 50350.0; // Measure the value of R1 in voltage divider circuit.
+float res1_1 = 50400.0; // Measure the value of R1 in voltage divider circuit.
+float res2_1 = 50700.0;
 float res_2 = 0.0;
 
 float load_cap = 10000000.0;
@@ -457,20 +484,22 @@ void film_sensor(){
                             &load1_array[analog_index], &load1_pin);
   load2_average = smoothing(&number_of_readings, &load2_total,
                             &load2_array[analog_index], &load2_pin);
-
+  // v_in = smoothing_Vin(&number_of_readings, &v_in_total, &v_in_array[analog_index]);
   //////////////////// For debugging
   // Serial.println(analogRead(load1_pin));
   // Serial.println(analogRead(load2_pin));
   // Serial.println(load2_average);
   // Serial.println(load2_average);
+  //Serial.println(v_in);
+  //Serial.println(emon1.readVcc());
 
   //Convert analog signal to voltage
   load1_v_out = load1_average / 1023 * v_in;
   load2_v_out = load2_average / 1023 * v_in;
 
   //Calculate the resistance value of the film sensor
-  load1_res2 = res_1 / (v_in / load1_v_out - 1.0);
-  load2_res2 = res_1 / (v_in / load2_v_out - 1.0);
+  load1_res2 = res1_1 / (v_in / load1_v_out - 1.0);
+  load2_res2 = res2_1 / (v_in / load2_v_out - 1.0);
 
   //If value is higher than the cap, it sets to the cap value, because the value can reach INF
   if(load1_res2 > load_cap){
@@ -485,8 +514,7 @@ void film_sensor(){
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            11. Current sensor
-#include "EmonLib.h"                   // Include Emon Library
-EnergyMonitor emon1;                   // Create an instance
+
 float Irms = 0.0;
 
 ////////////////////////////////////////////END of Sensors
@@ -518,7 +546,7 @@ void setup() {
   pinMode(TestPin,OUTPUT);
   digitalWrite(TestPin, HIGH);
   
-  //Initialize the fuild level, load film & position samples arrays
+  //Initialize the fuild level, load film & positi[on samples arrays
   for (int i = 0; i<number_of_readings; i++){
     fluidLevel_array[i] = 0;
     position1_array[i] = 0;
@@ -568,12 +596,12 @@ void loop() {
   position_sensors();
   fluid_level_sensor();
   film_sensor();
-
+  solenoid_drain_valve();
   analog_index++;
   if (analog_index == number_of_readings) analog_index = 0;
   ////////////////////////////////////////////////////////////////
 
-  solenoid_drain_valve();
+
   tachometer_sensor();
   flow_rate_sensor();
 
@@ -583,9 +611,10 @@ void loop() {
 
     rpm_calculation();
     flow_rate();
-    //shaft_temp();
+    shaft_temp();
     one_wire_temps();
     Irms = emon1.calcIrms(1480);  // Calculate Irms only
+    if (Irms < 2) Irms = 0;//Until library is fixed
 
 
     data = "D";
@@ -605,6 +634,7 @@ void loop() {
    * 10.flowrate
    * 11. posistion1_mm
    * 12. position2_mm
+   * 13. Irms
    * */
     receive_FFT();
     Serial.println(data);
