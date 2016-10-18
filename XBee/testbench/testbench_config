@@ -1,6 +1,6 @@
 Configuration of XBee modules on testbench
 
-Arduino module:
+Raspberry Pi module:
 
 Product family:         XB24-ZB
 Function set:           ZigBee Coordinator AT
@@ -14,8 +14,7 @@ Destination high (DH):  0013A200
 Destination low (DL):   4079CA2C
 
 
-
-Raspberry Pi module:
+Arduino module:
 
 Product family:       XB24-ZB
 Function set:         ZigBee Router AT
