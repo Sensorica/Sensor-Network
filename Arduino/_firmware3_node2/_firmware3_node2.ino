@@ -56,7 +56,7 @@ float smoothing(const int* numb_readings, float* total_sum,
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            0. NODE ID
-String NODE_ID = "1";
+String NODE_ID = "2";
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                            1. SERIAL MONITOR
 unsigned int long PRINT_DELAY = 10000;
@@ -593,25 +593,25 @@ int i;
 void loop() {
   /////////////////////////////////////////////////////////////////
   //                            Analog readings
-  position_sensors();
-  fluid_level_sensor();
-  film_sensor();
-  solenoid_drain_valve();
+  //position_sensors();
+  //fluid_level_sensor();
+  //film_sensor();
+  //solenoid_drain_valve();
   analog_index++;
   if (analog_index == number_of_readings) analog_index = 0;
   ////////////////////////////////////////////////////////////////
 
 
-  tachometer_sensor();
-  flow_rate_sensor();
+  //tachometer_sensor();
+  //flow_rate_sensor();
 
   //Serial.println(emon1.readVcc());
   
   if (millis() - last_print_time >= PRINT_DELAY){
 
-    rpm_calculation();
-    flow_rate();
-    shaft_temp();
+    //rpm_calculation();
+    //flow_rate();
+    //shaft_temp();
     one_wire_temps();
     Irms = emon1.calcIrms(1480);  // Calculate Irms only
     if (Irms < 2) Irms = 0;//Until library is fixed
@@ -636,12 +636,22 @@ void loop() {
    * 12. position2_mm
    * 13. Irms
    * */
-    receive_FFT();
+    
+    // NODE 1 PART
+    // receive_FFT();
+    // Serial.println(data);
+    // Serial.println("M" + data_mic);
+    // Serial.println("X" + data_x);
+    // Serial.println("Y" + data_y);
+    // Serial.println("Z" + data_z);
+    // 
+    // NODE 2 PART
     Serial.println(data);
-    Serial.println("M" + data_mic);
-    Serial.println("X" + data_x);
-    Serial.println("Y" + data_y);
-    Serial.println("Z" + data_z);  
+    Serial.println("M,0,0,0,0,0,0,0,0,0,0");
+    Serial.println("X,0,0,0,0,0,0,0,0,0,0");
+    Serial.println("Y,0,0,0,0,0,0,0,0,0,0");
+    Serial.println("Z,0,0,0,0,0,0,0,0,0,0");
+
     Serial.println("");
     
       //////////////////////////////////////////////////////Go back to Zero Delay Loop/////////////////////////////////////////////
