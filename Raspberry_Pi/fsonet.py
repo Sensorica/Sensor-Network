@@ -169,7 +169,7 @@ while True:
     #    print (tokenizedData1[x])
     #publishes payload to the topic to AWS endpoint
     mqttc.publish("$aws/things/testbench/shadow/update",payload,qos=0)
-    
-    #write current payload to file 
-    json_file = open('/home/pi/webapp/json', 'w')
-    json_file.write (payload)   
+    if nodeID = "1":
+        #write current payload to file 
+        json_file = open('/home/pi/webapp/json', 'w')
+        json_file.write (payload)   
