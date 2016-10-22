@@ -156,7 +156,7 @@ int close_valve_at_cm_level = 5; //2 inches
 
 boolean solenoid_valve_open = false;
 float flow_rate_cc_per_sec = 0.0;
-float water_level_buffer=1.0; //The water level buffer is how much the water level should increase before calculating a new flow rate
+float water_level_buffer=1.5; //The water level buffer is how much the water level should increase before calculating a new flow rate
 
 void solenoid_drain_valve(){
    //Start the drain if the water level is too high
@@ -168,6 +168,7 @@ void solenoid_drain_valve(){
 
 
   //Calculate the flow ratecal
+
    if (solenoid_valve_open == false){ 
     if (water_level_cm >= (flow_calc_water_level_cm + water_level_buffer)){
       //Serial.println("CALCULATION TRIGGERED!");
@@ -530,6 +531,20 @@ void add_data_floats(float* address_1){
 
 }
 
+//To fill analog readings array, to eliminate all zeroes
+void analog_readings_1cycle(){
+  int k;
+  for (int k = 0; k < number_of_readings ; k++){
+
+    fluidLevel_array[k] = analogRead(fluidLevel_pin);
+    position1_array[k] = analogRead(position1_pin);
+    position2_array[k] = analogRead(position2_pin);
+    load1_array[k] = analogRead(load1_pin);
+    load2_array[k] = analogRead(load2_pin);    
+  }
+
+}
+
 
 
 void setup() {
@@ -593,6 +608,8 @@ int i;
 void loop() {
   /////////////////////////////////////////////////////////////////
   //                            Analog readings
+  analog_readings_1cycle(); //to eliminate 0 values
+
   position_sensors();
   fluid_level_sensor();
   film_sensor();
@@ -605,16 +622,18 @@ void loop() {
   tachometer_sensor();
   flow_rate_sensor();
 
-  //Serial.println(emon1.readVcc());
+  //Serial.println(emon1.readVcc());.
+  //Serial.println(millis());
   
   if (millis() - last_print_time >= PRINT_DELAY){
+    //Serial.println(emon1.readVcc());
 
     rpm_calculation();
     flow_rate();
     shaft_temp();
     one_wire_temps();
     Irms = emon1.calcIrms(1480);  // Calculate Irms only
-    if (Irms < 2) Irms = 0;//Until library is fixed
+    if (Irms < 1) Irms = 0;//Until library is fixed
 
 
     data = "D";
